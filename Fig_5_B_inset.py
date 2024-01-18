@@ -3,7 +3,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # increase the figure size
-plt.rcParams['figure.figsize'] = [10, 10]
+plt.rcParams['figure.figsize'] = [12, 10]
 
 # remove the top and right spines from plot in the global plt setting
 plt.rcParams['axes.spines.top'] = False
@@ -36,7 +36,7 @@ plt.rcParams['font.family'] = 'Arial'
 pal = sns.color_palette("deep")
 
 # simulation setup
-dt = 0.001
+dt = 0.0001
 T = int(13 / dt)
 
 # neuronal parameters
@@ -104,19 +104,19 @@ for population in l_freeze:
             z_v = z_v * (z_v > 0)
 
             # perturb E population
-            if i == 4000:
+            if i == 40000:
                 r_e = r_e + (-r_e + np.power(z_e, alpha_e)) / tau_e * dt + 0.1
             else:
                 r_e = r_e + (-r_e + np.power(z_e, alpha_e)) / tau_e * dt
 
             # freeze PV population
-            if i > 3999 and population == 'PV':
+            if i > 39999 and population == 'PV':
                 r_p =  r_p
             else:
                 r_p = r_p + (-r_p + np.power(z_p, alpha_p)) / tau_p * dt
 
             # freeze SST population
-            if i > 3999 and population == 'SST':
+            if i > 39999 and population == 'SST':
                 r_s = r_s
             else:
                 r_s = r_s + (-r_s + np.power(z_s, alpha_s)) / tau_s * dt
@@ -162,19 +162,19 @@ for population in l_freeze:
             m_r_v_PV_freeze[k] = l_r_v
 
 
-# example activity plots PV freeze -- inhibition stabilization (Fig. 6B inset)
+# example activity plots PV freeze -- inhibition stabilization (Fig. 5B inset)
 for i in [0]:
     plt.figure()
 
-    plt.plot(m_r_e_PV_freeze[i]/m_r_e_PV_freeze[i][3000], color=pal[0])
-    plt.plot(m_r_p_PV_freeze[i]/m_r_p_PV_freeze[i][3000], color=pal[1])
-    plt.plot(m_r_s_PV_freeze[i]/m_r_s_PV_freeze[i][3000], color=pal[2])
-    plt.plot(m_r_v_PV_freeze[i]/m_r_v_PV_freeze[i][3000], color=pal[3])
+    plt.plot(m_r_e_PV_freeze[i]/m_r_e_PV_freeze[i][30000], color=pal[0])
+    plt.plot(m_r_p_PV_freeze[i]/m_r_p_PV_freeze[i][30000], color=pal[1])
+    plt.plot(m_r_s_PV_freeze[i]/m_r_s_PV_freeze[i][30000], color=pal[2])
+    plt.plot(m_r_v_PV_freeze[i]/m_r_v_PV_freeze[i][30000], color=pal[3])
 
-    plt.xticks(np.arange(7000, 13000 + 500, 2000), np.arange(4, 10 + 0.5, 2))
+    plt.xticks(np.arange(70000, 130000 + 5000, 20000), np.arange(4, 11, 2))
     plt.xlabel('Time (s)')
     plt.ylabel('Normalized activity')
-    plt.xlim([7000, 13000])
+    plt.xlim([70000, 130000])
 
     if i==0:
         plt.yticks([0.9, 0.95, 1, 1.05, 1.1])
@@ -182,6 +182,6 @@ for i in [0]:
 
     plt.legend(['E', 'PV', 'SST', 'VIP'], loc='upper right')
 
-    plt.savefig('Network_activity_PV_freeze_inset.png')
+    plt.savefig('Fig_5B_left_inset.png')
     plt.close()
 

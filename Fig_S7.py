@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # increase the figure size
-plt.rcParams['figure.figsize'] = [10, 10]
+plt.rcParams['figure.figsize'] = [12, 10]
 
 # remove the top and right spines from plot in the global plt setting
 plt.rcParams['axes.spines.top'] = False
@@ -152,7 +152,7 @@ for index, alpha in enumerate(l_alpha):
 
         ex_e_e = Jee * r_e
 
-        if i == 49998:
+        if i == 49999:
             ratio_inh_SST_PV.append(inh_e_s/inh_e_p)
             inh_total[index] = inh_e_s + inh_e_p
             e_total[index] = ex_e_e
@@ -207,7 +207,7 @@ for index, alpha in enumerate(l_alpha):
     l_sum = np.asarray(l_sum)
 
 
-    # plot the input to E for low and high baseline activity(Fig. S7 A,B)
+    # plot the input to E for low and high baseline activity(Fig. S7A, B)
     if alpha == 0 or alpha == 15:
         plt.figure()
 
@@ -216,8 +216,10 @@ for index, alpha in enumerate(l_alpha):
         plt.plot(l_inh_e_s)
         plt.plot(l_inh_e)
         plt.plot(l_sum)
+        
+        plt.axhline(y=0, color='k', linestyle='--')
 
-        plt.xticks(np.arange(3000, 9000 + 500, 2000), np.arange(0, 6 + 0.5, 2))
+        plt.xticks(np.arange(30000, 90000 + 5000, 20000), np.arange(0, 7, 2))
         plt.xlim([30000, 90000])
         plt.xlabel('Time (s)')
 
@@ -226,22 +228,24 @@ for index, alpha in enumerate(l_alpha):
         plt.legend(['E', 'PV', 'SST', 'I', 'E + I'], loc='upper left')
 
         if alpha == 0:
+            plt.hlines(y=7.9, xmin=50000, xmax=70000, color='gray')
             plt.yticks([-8, -4, 0, 4, 8])
             plt.ylim([-8, 8])
             plt.title('Low baseline state')
-            plt.savefig('Low_baseline_input_to_E.png')
+            plt.savefig('Fig_S7A.png')
         else:
+            plt.hlines(y=59.9, xmin=50000, xmax=70000, color='gray')
             plt.yticks([-40, -20, 0, 20, 40, 60])
-            plt.ylim([-20, 20])
+            plt.ylim([-40, 60])
             plt.title('High baseline state')
-            plt.savefig('High_baseline_input_to_E.png')
+            plt.savefig('Fig_S7B.png')
             plt.close()
 
-# plot the ratio of SST over PV to E inhibition for different alpha (Fig. S7 C)
+# plot the ratio of SST over PV to E inhibition for different alpha (Fig. S7C)
 plt.figure()
 
 plt.plot(ratio_inh_SST_PV)
-plt.hlines(y=1, xmin=-2, xmax=42, colors='k', linestyles=[(0, (6, 6, 6, 6))])
+plt.axhline(y=1, color='k', linestyle='--')
 
 plt.yticks([0, 0.5, 1.0, 1.5, 2.0, 2.5])
 plt.ylim([0, 2.5])
@@ -252,6 +256,6 @@ plt.xlim([-2, 42])
 plt.xlabel(r'$\alpha$')
 plt.ylabel('Ratio of SST-to-E \n to PV-to-E inhibition')
 
-plt.savefig('Ratio_SST-PV-to-E_inhibition.png')
+plt.savefig('Fig_S7C.png')
 
 

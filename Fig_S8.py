@@ -1,8 +1,10 @@
 import numpy as np
+import seaborn as sns
 import matplotlib.pyplot as plt
+pal = sns.color_palette("deep")
 
 # increase the figure size
-plt.rcParams['figure.figsize'] = [10, 10]
+plt.rcParams['figure.figsize'] = [12, 10]
 
 # remove the top and right spines from plot in the global plt setting
 plt.rcParams['axes.spines.top'] = False
@@ -41,17 +43,17 @@ tau_e, tau_p, tau_s, tau_v = 0.020, 0.010, 0.010, 0.010
 alpha_e, alpha_p, alpha_s, alpha_v = 1.0, 1.0, 1.0, 1.0
 
 # network connectivity
-Jee = 1.3
-Jep = 1.6
+Jee = 1.8
+Jep = 2.0
 Jes = 1.0
 Jev = 0
 
-Jpe = 1.0
+Jpe = 1.4
 Jpp = 1.3
 Jps = 0.8
 Jpv = 0
 
-Jse = 0.8
+Jse = 0.9
 Jsp = 0
 Jss = 0
 Jsv = 0.6
@@ -61,26 +63,30 @@ Jvp = 0.4
 Jvs = 0.4
 Jvv = 0
 
-# neuronal parameters
-tau_e, tau_p, tau_s, tau_v = 0.020, 0.010, 0.010, 0.010
-alpha_e, alpha_p, alpha_s, alpha_v = 1.0, 1.0, 1.0, 1.0
+g_1 = 7
+g_2 = 5
 
+init_u_s_ee = 0.3
+init_tau_x_ee = 0.01
 
-l_alpha = np.arange(0, 20.1, 1)
-l_c = [0.1]
+l_alpha = [0, 5, 15, 77, 90]
+sections = ['A', 'B', 'C', 'D', 'E']
 
-l_det_E_PV_VIP = np.zeros((len(l_c), len(l_alpha)))
+m_r_e_SST_freeze, m_r_p_SST_freeze, m_r_s_SST_freeze, m_r_v_SST_freeze = np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T))
+m_r_e_PV_freeze, m_r_p_PV_freeze, m_r_s_PV_freeze, m_r_v_PV_freeze = np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T))
+m_r_e_both_freeze, m_r_p_both_freeze, m_r_s_both_freeze, m_r_v_both_freeze = np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T))
 
-for n, c in enumerate(l_c):
-    l_R_SV = []
+# Inhibition stabilization 
+l_freeze = ['SST', 'PV', 'both']
 
+for ID, population in enumerate(l_freeze):
     for k, alpha in enumerate(l_alpha):
-        J_E_PV_VIP = np.zeros((6, 6))
-    
         # depression variables
-        x_ep, x_pp, x_vp = 1, 1, 1
+        x_ep, x_pp, x_vp, x_ee = 1, 1, 1, 1
         u_s = 1
         tau_x = 0.10
+        u_s_ee = init_u_s_ee
+        tau_x_ee = init_tau_x_ee
 
         # facilitation variables
         u_vs = 1
@@ -91,15 +97,11 @@ for n, c in enumerate(l_c):
         z_e, z_p, z_s, z_v = 0, 0, 0, 0
 
         l_r_e, l_r_p, l_r_s, l_r_v = [], [], [], []
-        l_R_SV_temp = []
 
         for i in range(T):
-            if 50000 <= i < 70000:
-                g_e, g_p, g_s, g_v = 4 + alpha, 4 + alpha, 3, 4 + c
-            else:
-                g_e, g_p, g_s, g_v = 4 + alpha, 4 + alpha, 3, 4
+            g_e, g_p, g_s, g_v = g_1 + alpha, g_1 + alpha, g_2, g_1
 
-            z_e = Jee * r_e - x_ep * Jep * r_p - Jes * r_s - Jev * r_v + g_e
+            z_e = x_ee * Jee * r_e - x_ep * Jep * r_p - Jes * r_s - Jev * r_v + g_e
             z_p = Jpe * r_e - x_pp * Jpp * r_p - Jps * r_s - Jpv * r_v + g_p
             z_s = Jse * r_e - Jsp * r_p - Jss * r_s - Jsv * r_v + g_s
             z_v = Jve * r_e - x_vp * Jvp * r_p - u_vs * Jvs * r_s - Jvv * r_v + g_v
@@ -109,9 +111,24 @@ for n, c in enumerate(l_c):
             z_s = z_s * (z_s > 0)
             z_v = z_v * (z_v > 0)
 
-            r_e = r_e + (-r_e + np.power(z_e, alpha_e)) / tau_e * dt
-            r_p = r_p + (-r_p + np.power(z_p, alpha_p)) / tau_p * dt
-            r_s = r_s + (-r_s + np.power(z_s, alpha_s)) / tau_s * dt
+            # perturb E population
+            if i == 40000:
+                r_e = r_e + (-r_e + np.power(z_e, alpha_e)) / tau_e * dt + 0.1
+            else:
+                r_e = r_e + (-r_e + np.power(z_e, alpha_e)) / tau_e * dt
+
+            # freeze PV population
+            if i > 39999 and (population == 'PV' or population == 'both'):
+                r_p =  r_p
+            else:
+                r_p = r_p + (-r_p + np.power(z_p, alpha_p)) / tau_p * dt
+
+            # freeze SST population
+            if i > 39999 and (population == 'SST' or population == 'both'):
+                r_s = r_s
+            else:
+                r_s = r_s + (-r_s + np.power(z_s, alpha_s)) / tau_s * dt
+                
             r_v = r_v + (-r_v + np.power(z_v, alpha_v)) / tau_v * dt
 
             r_e = r_e * (r_e > 0)
@@ -120,21 +137,20 @@ for n, c in enumerate(l_c):
             r_v = r_v * (r_v > 0)
 
             # STD
-            x_ep_pre = np.copy(x_ep)
             x_ep = x_ep + ((1 - x_ep) / tau_x - u_s * x_ep * r_p) * dt
             x_ep = np.clip(x_ep, 0, 1)
 
-            x_pp_pre = np.copy(x_pp)
             x_pp = x_pp + ((1 - x_pp) / tau_x - u_s * x_pp * r_p) * dt
             x_pp = np.clip(x_pp, 0, 1)
 
-            x_vp_pre = np.copy(x_vp)
             x_vp = x_vp + ((1 - x_vp) / tau_x - u_s * x_vp * r_p) * dt
             x_vp = np.clip(x_vp, 0, 1)
 
+            x_ee = x_ee + ((1 - x_ee) / tau_x_ee - u_s_ee * x_ee * r_e) * dt
+            x_ee = np.clip(x_ee, 0, 1)
+
             # STF
-            u_vs_pre = np.copy(u_vs)
-            u_vs = u_vs + ((1 - u_vs) / tau_u + U * (U_max - u_vs) * r_s) * dt
+            u_vs = u_vs + ((U - u_vs) / tau_u + U * (U_max - u_vs) * r_s) * dt
             u_vs = np.clip(u_vs, 1, U_max)
 
             l_r_e.append(r_e)
@@ -142,116 +158,123 @@ for n, c in enumerate(l_c):
             l_r_s.append(r_s)
             l_r_v.append(r_v)
 
-            # k-value
-            p_pp = 1 / (1+u_s*tau_x *r_p)
-            p_pp_prime = - (u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
-            p_ep = 1 / (1+u_s*tau_x *r_p)
-            p_ep_prime = - (u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
-            p_vp = 1 / (1+u_s*tau_x *r_p)
-            p_vp_prime = - (u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
-            p_vs = (1 + U * U_max * tau_u * r_s) / (1 + U * tau_u * r_s)
-            p_vs_prime = (U * (U_max - 1) * tau_u) / np.power(1 + U * tau_u * r_s, 2)
-
-            K_SV = (p_pp + p_pp_prime * r_p) * Jee * Jpp * Jsv - (p_ep + p_ep_prime * r_p) * Jsv * Jpe * Jep - (p_pp + p_pp_prime * r_p) * Jpp * Jsv + Jee * Jsv - Jsv
-
-            # Jacobian of the E-PV-VIP subnetwork
-            J_E_PV_VIP[0, 0] = (Jee - 1) / tau_e
-            J_E_PV_VIP[0, 1] = - x_ep * Jep / tau_e
-            J_E_PV_VIP[0, 2] = -Jev / tau_e
-            J_E_PV_VIP[0, 3] = -Jep * r_p / tau_e
-            J_E_PV_VIP[0, 4] = 0
-            J_E_PV_VIP[0, 5] = 0
-            J_E_PV_VIP[1, 0] = Jpe/ tau_p
-            J_E_PV_VIP[1, 1] = (-1 - x_pp * Jpp)  / tau_p
-            J_E_PV_VIP[1, 2] = -Jpv/ tau_p
-            J_E_PV_VIP[1, 3] = 0
-            J_E_PV_VIP[1, 4] = -Jpp * r_p/ tau_p
-            J_E_PV_VIP[1, 5] = 0
-            J_E_PV_VIP[2, 0] = Jve / tau_v
-            J_E_PV_VIP[2, 1] = -x_vp * Jvp / tau_v
-            J_E_PV_VIP[2, 2] = (-1 - Jvv)  / tau_v
-            J_E_PV_VIP[2, 3] = 0
-            J_E_PV_VIP[2, 4] = 0
-            J_E_PV_VIP[2, 5] = -Jvp * r_p / tau_v
-            J_E_PV_VIP[3, 0] = 0
-            J_E_PV_VIP[3, 1] = -u_s * x_ep
-            J_E_PV_VIP[3, 2] = 0
-            J_E_PV_VIP[3, 3] = -1/tau_x - u_s * r_p
-            J_E_PV_VIP[3, 4] = 0
-            J_E_PV_VIP[3, 5] = 0
-            J_E_PV_VIP[4, 0] = 0
-            J_E_PV_VIP[4, 1] = -u_s * x_pp
-            J_E_PV_VIP[4, 2] = 0
-            J_E_PV_VIP[4, 3] = 0
-            J_E_PV_VIP[4, 4] = -1/tau_x - u_s * r_p
-            J_E_PV_VIP[4, 5] = 0
-            J_E_PV_VIP[5, 0] = 0
-            J_E_PV_VIP[5, 1] = -u_s * x_vp
-            J_E_PV_VIP[5, 2] = 0
-            J_E_PV_VIP[5, 3] = 0
-            J_E_PV_VIP[5, 4] = 0
-            J_E_PV_VIP[5, 5] = -1/tau_x - u_s * r_p
-
-            if 40000 < i < 45000:
-                mat_R = np.array(
-                    [[1-Jee, (p_ep + p_ep_prime * r_p) * Jep, Jes, Jev],
-                    [-Jpe, 1 + (p_pp + p_pp_prime * r_p) * Jpp, Jps, Jpv],
-                    [-Jse, Jsp, 1+Jss, Jsv],
-                    [-Jve, (p_vp + p_vp_prime * r_p) * Jvp, (p_vs + p_vs_prime * r_s) * Jvs, 1 + Jvv]
-                    ]
-                )
-
-                det_mat_R = np.linalg.det(mat_R)
-                
-                R_SV = 1/det_mat_R * K_SV * c
-
-                l_R_SV_temp.append(R_SV)
-
-            if i == 69999:
-                l_det_E_PV_VIP[n,k] = np.linalg.det(J_E_PV_VIP)
-
         l_r_e = np.asarray(l_r_e)
         l_r_p = np.asarray(l_r_p)
         l_r_s = np.asarray(l_r_s)
         l_r_v = np.asarray(l_r_v)
 
-        l_R_SV_temp = np.array(l_R_SV_temp)
+        if population == 'SST':
+            m_r_e_SST_freeze[k] = l_r_e
+            m_r_p_SST_freeze[k] = l_r_p
+            m_r_s_SST_freeze[k] = l_r_s
+            m_r_v_SST_freeze[k] = l_r_v
+        elif population == 'PV':
+            m_r_e_PV_freeze[k] = l_r_e
+            m_r_p_PV_freeze[k] = l_r_p
+            m_r_s_PV_freeze[k] = l_r_s
+            m_r_v_PV_freeze[k] = l_r_v
+        elif population == 'both':
+            m_r_e_both_freeze[k] = l_r_e
+            m_r_p_both_freeze[k] = l_r_p
+            m_r_s_both_freeze[k] = l_r_s
+            m_r_v_both_freeze[k] = l_r_v
 
-        l_R_SV.append(np.mean(l_R_SV_temp))
 
-    # plotting
-    fig, ax = plt.subplots()
+# example activity plots SST freeze -- inhibition stabilization
+for i in range(len(l_alpha)):
+    plt.figure()
 
-    ax.hlines(y=0, xmin=-1, xmax=21, colors='k', linestyles=[(0, (6, 6, 6, 6))])
+    plt.plot(m_r_e_SST_freeze[i]/m_r_e_SST_freeze[i][30000], color=pal[0])
+    plt.plot(m_r_p_SST_freeze[i]/m_r_p_SST_freeze[i][30000], color=pal[1])
+    plt.plot(m_r_s_SST_freeze[i]/m_r_s_SST_freeze[i][30000], color=pal[2])
+    plt.plot(m_r_v_SST_freeze[i]/m_r_v_SST_freeze[i][30000], color=pal[3])
 
-    p1, = ax.plot(l_det_E_PV_VIP[0])
+    plt.xticks(np.arange(30000, 90000 + 5000, 20000), np.arange(0, 7, 2))
 
-    ax.set_yticks([-10e9, -5e9, 0, 5e9, 10e9])
-    ax.set_yticklabels([-10, -5, 0, 5, 10])
-    ax.set_ylim([-10e9, 10e9])
-    ax.set_ylabel(r'Magnitude of det($\mathbf{M}_{\text{E-PV-VIP}}$)')
+    if i in [1, 2]:
+        plt.hlines(y=999, xmin=40000, xmax=90000, color='gray')
+        plt.yticks([0.1, 1, 10, 100, 1000])
+        plt.ylim([0.1, 1000])
+        plt.yscale('log')
+    else:
+        plt.hlines(y=1.09, xmin=40000, xmax=90000, color='gray')
+        plt.yticks([0.95, 1, 1.05, 1.1])
+        plt.ylim([0.95, 1.1])
 
-    ax2 = ax.twinx()
-    ax2.spines['top'].set_visible(False)
-    ax2.spines['right'].set_visible(True)
-    ax2.spines['bottom'].set_visible(True)
-    ax2.spines['left'].set_visible(True)
+    plt.xlabel('Time (s)')
+    plt.ylabel('Relative change (a.u.)')
+    plt.xlim([30000, 90000])
 
-    p2, = ax2.plot(l_R_SV)
+    alpha = l_alpha[i]
+    plt.title(f'SST freeze, {alpha=}')
+    
+    plt.legend(['E', 'PV', 'SST', 'VIP'], loc='upper right')
 
-    ax2.set_xticks([0, 5, 10, 15, 20])
-    ax2.set_xticklabels([0, 5, 10, 15, 20])
-    ax2.set_xlim([-1, 21])
-
-    ax2.set_yticks(np.array([-0.2, -0.1, 0, 0.1, 0.2]))
-    ax2.set_yticklabels(np.array([-0.2, -0.1, 0, 0.1, 0.2]))
-    ax2.set_ylim([-0.2, 0.2])
-
-    ax2.set_xlabel(r'$\alpha$')
-    ax2.set_ylabel('Change in SST activity (Hz)')
-
-    plt.legend([p1, p2], [r'det($\mathbf{M}_{E-PV-VIP}$)', ' analytics ($R_{SV}$)'], loc='top left')
-
-    plt.savefig('Comparison_RSV_det_E_PV_VIP.png')
+    plt.savefig(f'Fig_S8{sections[i]}_left.png')
     plt.close()
 
+# example activity plots PV freeze -- inhibition stabilization 
+for i in range(len(l_alpha)):
+    plt.figure()
+
+    plt.plot(m_r_e_PV_freeze[i]/m_r_e_PV_freeze[i][30000], color=pal[0])
+    plt.plot(m_r_p_PV_freeze[i]/m_r_p_PV_freeze[i][30000], color=pal[1])
+    plt.plot(m_r_s_PV_freeze[i]/m_r_s_PV_freeze[i][30000], color=pal[2])
+    plt.plot(m_r_v_PV_freeze[i]/m_r_v_PV_freeze[i][30000], color=pal[3])
+
+    plt.xticks(np.arange(30000, 90000 + 5000, 20000), np.arange(0, 7, 2))
+    plt.xlabel('Time (s)')
+    plt.ylabel('Relative change (a.u.)')
+    plt.xlim([30000, 90000])
+
+    if i in [0, 1]:
+        plt.hlines(y=99.9, xmin=40000, xmax=90000, color='gray')
+        plt.yticks([0.1, 1, 10, 100])
+        plt.ylim([0.1, 100])
+        plt.yscale('log')
+    else:
+        plt.hlines(y=1.09, xmin=40000, xmax=90000, color='gray')
+        plt.yticks([0.9, 0.95, 1, 1.05, 1.1])
+        plt.ylim([0.9, 1.1])
+
+    alpha = l_alpha[i]
+    plt.title(f'PV freeze, {alpha=}')
+
+    plt.legend(['E', 'PV', 'SST', 'VIP'], loc='upper right')
+
+    plt.savefig(f'Fig_S8{sections[i]}_middle.png')
+    plt.close()
+    
+# example activity plots both freeze -- inhibition stabilization 
+for i in range(len(l_alpha)):
+    plt.figure()
+
+    plt.plot(m_r_e_both_freeze[i]/m_r_e_both_freeze[i][30000], color=pal[0])
+    plt.plot(m_r_p_both_freeze[i]/m_r_p_both_freeze[i][30000], color=pal[1])
+    plt.plot(m_r_s_both_freeze[i]/m_r_s_both_freeze[i][30000], color=pal[2])
+    plt.plot(m_r_v_both_freeze[i]/m_r_v_both_freeze[i][30000], color=pal[3])
+
+    plt.xticks(np.arange(30000, 90000 + 5000, 20000), np.arange(0, 7, 2))
+    # plt.yticks([0.8, 0.9, 1, 1.1, 1.2])
+    plt.xlabel('Time (s)')
+    plt.ylabel('Relative change (a.u.)')
+    plt.xlim([30000, 90000])
+    # plt.ylim([-2, 20+10*i])
+
+    if i in [0, 1, 2]:
+        plt.hlines(y=999, xmin=40000, xmax=90000, color='gray')
+        plt.yticks([0.1, 1, 10, 100, 1000])
+        plt.ylim([0.1, 1000])
+        plt.yscale('log')
+    else:
+        plt.hlines(y=1.09, xmin=40000, xmax=90000, color='gray')
+        plt.yticks([0.9, 0.95, 1, 1.05, 1.1])
+        plt.ylim([0.9, 1.1])
+
+    alpha = l_alpha[i]
+    plt.title(f'Both freeze, {alpha=}')
+
+    plt.legend(['E', 'PV', 'SST', 'VIP'], loc='upper right')
+
+    plt.savefig(f'Fig_S8{sections[i]}_right.png')
+    plt.close()

@@ -1,8 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 
 # increase the figure size
-plt.rcParams['figure.figsize'] = [10, 10]
+plt.rcParams['figure.figsize'] = [12, 10]
 
 # remove the top and right spines from plot in the global plt setting
 plt.rcParams['axes.spines.top'] = False
@@ -61,24 +62,26 @@ Jvp = 0.4
 Jvs = 0.4
 Jvv = 0
 
+l_alpha = np.arange(20, -0.1, -1)
 
-l_alpha = np.arange(0,20.1,.5)
-l_c = [0]
+x_ep_ini, x_pp_ini, x_vp_ini = 1, 1, 1
+u_vs_ini = 1
 
+l_intact, l_inactive_PV_E, l_inactive_PV_PV, l_inactive_PV_VIP, l_inactive_SST_VIP = [], [], [], [], []
+l_PV_E, l_PV_E_base = [], []
 
-for n, c in enumerate(l_c):
-    l_R_SV = []
-    l_k_SV_PPD, l_k_SV_PED = [], []
-    l_D, l_x_pp, l_x_ep = [], [], []
+l_r_baseline = np.zeros((len(l_alpha), 4, 5))
+titles = []
 
-    for k, alpha in enumerate(l_alpha):
+for i, alpha in enumerate(l_alpha):
+    for m in range(5):
         # depression variables
-        x_ep, x_pp, x_vp = 1, 1, 1
+        x_ep, x_pp, x_vp = x_ep_ini, x_pp_ini, x_vp_ini
         u_s = 1
         tau_x = 0.10
 
         # facilitation variables
-        u_vs = 1
+        u_vs = u_vs_ini
         U, U_max = 1, 3
         tau_u = 0.40
 
@@ -86,13 +89,9 @@ for n, c in enumerate(l_c):
         z_e, z_p, z_s, z_v = 0, 0, 0, 0
 
         l_r_e, l_r_p, l_r_s, l_r_v = [], [], [], []
-        l_R_SV_temp = []
 
-        for i in range(T):
-            if 50000 <= i < 70000:
-                g_e, g_p, g_s, g_v = 4 + alpha, 4 + alpha, 3, 4 + c
-            else:
-                g_e, g_p, g_s, g_v = 4 + alpha, 4 + alpha, 3, 4
+        for t in range(T):
+            g_e, g_p, g_s, g_v = 4 + alpha, 4 + alpha, 3, 4
 
             z_e = Jee * r_e - x_ep * Jep * r_p - Jes * r_s - Jev * r_v + g_e
             z_p = Jpe * r_e - x_pp * Jpp * r_p - Jps * r_s - Jpv * r_v + g_p
@@ -115,156 +114,135 @@ for n, c in enumerate(l_c):
             r_v = r_v * (r_v > 0)
 
             # STD
-            x_ep_pre = np.copy(x_ep)
-            x_ep = x_ep + ((1 - x_ep) / tau_x - u_s * x_ep * r_p) * dt
-            x_ep = np.clip(x_ep, 0, 1)
+            if m != 1:
+                x_ep = x_ep + ((1 - x_ep) / tau_x - u_s * x_ep * r_p) * dt
+                x_ep = np.clip(x_ep, 0, 1)
+            else:
+                if alpha == np.max(l_alpha):
+                    if t <= 50000:
+                        x_ep = x_ep + ((1 - x_ep) / tau_x - u_s * x_ep * r_p) * dt
+                        x_ep = np.clip(x_ep, 0, 1)
+                        x_ep_ini = x_ep
+                    else:
+                        pass
+                else:
+                    pass
 
-            x_pp_pre = np.copy(x_pp)
-            x_pp = x_pp + ((1 - x_pp) / tau_x - u_s * x_pp * r_p) * dt
-            x_pp = np.clip(x_pp, 0, 1)
+            if m != 2:
+                x_pp = x_pp + ((1 - x_pp) / tau_x - u_s * x_pp * r_p) * dt
+                x_pp = np.clip(x_pp, 0, 1)
+            else:
+                if alpha == np.max(l_alpha):
+                    if t <= 50000:
+                        x_pp = x_pp + ((1 - x_pp) / tau_x - u_s * x_pp * r_p) * dt
+                        x_pp = np.clip(x_pp, 0, 1)
+                        x_pp_ini = x_pp
+                    else:
+                        pass
+                else:
+                    pass
 
-            x_vp_pre = np.copy(x_vp)
-            x_vp = x_vp + ((1 - x_vp) / tau_x - u_s * x_vp * r_p) * dt
-            x_vp = np.clip(x_vp, 0, 1)
+            if m != 3:
+                x_vp = x_vp + ((1 - x_vp) / tau_x - u_s * x_vp * r_p) * dt
+                x_vp = np.clip(x_vp, 0, 1)
+            else:
+                if alpha == np.max(l_alpha):
+                    if t <= 50000:
+                        x_vp = x_vp + ((1 - x_vp) / tau_x - u_s * x_vp * r_p) * dt
+                        x_vp = np.clip(x_vp, 0, 1)
+                        x_vp_ini = x_vp
+                    else:
+                        pass
+                else:
+                    pass
 
             # STF
-            u_vs_pre = np.copy(u_vs)
-            u_vs = u_vs + ((1 - u_vs) / tau_u + U * (U_max - u_vs) * r_s) * dt
-            u_vs = np.clip(u_vs, 1, U_max)
+            if m != 4:
+                u_vs = u_vs + ((1 - u_vs) / tau_u + U * (U_max - u_vs) * r_s) * dt
+                u_vs = np.clip(u_vs, 1, U_max)
+            else:
+                if alpha == np.max(l_alpha):
+                    if t <= 50000:
+                        u_vs = u_vs + ((1 - u_vs) / tau_u + U * (U_max - u_vs) * r_s) * dt
+                        u_vs = np.clip(u_vs, 1, U_max)
+                        u_vs_ini = u_vs
+                    else:
+                        pass
+                else:
+                    pass
+                
+            if m == 0 and t == 40000:
+                l_PV_E.append(-x_ep * Jep * r_p)
+                l_PV_E_base.append(-Jep * r_p)
 
             l_r_e.append(r_e)
             l_r_p.append(r_p)
             l_r_s.append(r_s)
             l_r_v.append(r_v)
 
-            # k-value
-            p_pp = 1 / (1+u_s*tau_x *r_p)
-            p_pp_prime = - (u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
-            p_ep = 1 / (1+u_s*tau_x *r_p)
-            p_ep_prime = - (u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
-            p_vp = 1 / (1+u_s*tau_x *r_p)
-            p_vp_prime = - (u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
-            p_vs = (1 + U * U_max * tau_u * r_s) / (1 + U * tau_u * r_s)
-            p_vs_prime = (U * (U_max - 1) * tau_u) / np.power(1 + U * tau_u * r_s, 2)
-
-            x_ep_ss = 1 / (1 + u_s * tau_x * r_p)
-            x_pp_ss = 1 / (1 + u_s * tau_x * r_p)
-            x_vp_ss = 1 / (1 + u_s * tau_x * r_p)
-
-            u_vs_ss = (1 + U * U_max * tau_u * r_s) / (1 + U * tau_u * r_s)
-
-            k_SV_PPD = (p_pp + p_pp_prime * r_p - 1) * (Jee - 1) * Jpp * Jsv
-            k_SV_PED = -(p_ep + p_ep_prime * r_p - 1) * Jsv * Jpe * Jep
-
-            if i == 49999:
-
-                mat_R = np.array(
-                    [[1-Jee, (p_ep + p_ep_prime * r_p) * Jep, Jes, Jev],
-                    [-Jpe, 1 + (p_pp + p_pp_prime * r_p) * Jpp, Jps, Jpv],
-                    [-Jse, Jsp, 1+Jss, Jsv],
-                    [-Jve, (p_vp + p_vp_prime * r_p) * Jvp, (p_vs + p_vs_prime * r_s) * Jvs, 1 + Jvv]
-                    ]
-                )
-
-                det_mat_R = np.linalg.det(mat_R)
-
-                l_D.append(1/det_mat_R)
-                l_x_pp.append(p_pp + p_pp_prime * r_p - 1)
-                l_x_ep.append(p_ep + p_ep_prime * r_p - 1)
-
-                l_k_SV_PPD.append(k_SV_PPD)
-                l_k_SV_PED.append(k_SV_PED)
-
         l_r_e = np.asarray(l_r_e)
         l_r_p = np.asarray(l_r_p)
         l_r_s = np.asarray(l_r_s)
         l_r_v = np.asarray(l_r_v)
 
-    l_D = np.asarray(l_D)
-    l_x_pp = np.asarray(l_x_pp)
-    l_x_ep = np.asarray(l_x_ep)
+        if m == 0:
+            l_intact.append(np.mean(l_r_e[35000:45000]))
+        elif m == 1:
+            l_inactive_PV_E.append(np.mean(l_r_e[35000:45000]))
+        elif m == 2:
+            l_inactive_PV_PV.append(np.mean(l_r_e[35000:45000]))
+        elif m == 3:
+            l_inactive_PV_VIP.append(np.mean(l_r_e[35000:45000]))
+        else:
+            l_inactive_SST_VIP.append(np.mean(l_r_e[35000:45000]))
 
-    l_k_SV_PPD = np.asarray(l_k_SV_PPD)
-    l_k_SV_PED = np.asarray(l_k_SV_PED)
+# excitatory activity as function of alpha (Fig. S5A)
+plt.figure()
 
+norm = mpl.colors.Normalize(vmin=1, vmax=10)
+cmap_blue = mpl.cm.ScalarMappable(norm=norm, cmap=mpl.cm.Blues)
+cmap_purple = mpl.cm.ScalarMappable(norm=norm, cmap=mpl.cm.Purples)
 
-    # plot magnitude of D (Fig. S5 A)
-    plt.figure()
+l_intact.reverse()
+l_inactive_PV_E.reverse()
+l_inactive_PV_PV.reverse()
+l_inactive_PV_VIP.reverse()
+l_inactive_SST_VIP.reverse()
 
-    s_title_t1 = 'Change in prealpha D'
-    s_title_1 = 'Change_in_prealpha_D_'
+plt.plot(l_intact, color=cmap_blue.to_rgba(4+3))
+plt.plot(l_inactive_PV_PV, color=cmap_blue.to_rgba(3+3))
+plt.plot(l_inactive_PV_VIP, color=cmap_blue.to_rgba(2+3))
+plt.plot(l_inactive_SST_VIP, color=cmap_blue.to_rgba(1+3))
+plt.plot(l_inactive_PV_E, color=cmap_purple.to_rgba(6+3))
 
-    plt.plot(l_D)
+plt.xticks([0, 5, 10, 15, 20], [0, 5, 10, 15, 20])
+plt.yticks([0, 15, 30, 45])
 
-    plt.yticks([0, 5, 10, 15])
-    # plt.yticks(fontsize=font_size_1, **hfont)
-    plt.ylim([0, 15])
+plt.xlabel(r'$\alpha$')
+plt.ylabel('Firing rate (a.u.)')
+plt.xlim([-1, 21])
+plt.ylim([0, 45])
 
-    plt.xticks([0, 10, 20, 30, 40], [0, 5, 10, 15, 20])
-    plt.xlim([-2, 42])
+plt.legend(['all mechanisms', 'Inactive PV-to-PV STD', 'Inactive PV-to-VIP STD', 'Inactive SST-to-VIP STF', 'Inactive PV-to-E STD'], loc='best')
 
-    plt.hlines(y=0, xmin=-2, xmax=42, colors='k', linestyles=[(0, (6, 6, 6, 6))])
+plt.savefig('Fig_S5A.png')
 
-    plt.xlabel(r'$\alpha$')
-    plt.ylabel('Magnitude of D')
-    plt.title(str(s_title_t1))
+# PV-E synaptic strength as function of alpha (Fig. S5B)
+plt.figure()
 
+l_PV_E.reverse()
+l_PV_E_base.reverse()
 
-    plt.savefig(str(s_title_1) + '.png')
-    plt.close()
+plt.plot(l_PV_E, color='pink')
+plt.plot(l_PV_E_base, color='pink', linestyle='--')
 
+plt.xticks([0, 5, 10, 15, 20], [0, 5, 10, 15, 20])
+plt.xlabel(r'$\alpha$')
+plt.xlim([-1, 21])
 
-    # plot PV-to-E STD and PV-to-PV STD dependent term (Fig. S5 B)
-    plt.figure()
+plt.yticks([-25, -20, -15, -10, -5, 0])
+plt.ylabel('Inh. input to E')
+plt.ylim([-25, 0])
 
-    s_title_t1 = 'Change in plasticity parameters'
-    s_title_1 = 'Change_in_plasticity_parameters_'
-
-    plt.plot(l_x_pp)
-    plt.plot(l_x_ep)
-
-    plt.yticks([-1, -0.5, 0, 0.5, 1])
-    plt.ylim([-1, 1])
-
-    plt.xticks([0, 10, 20, 30, 40], [0, 5, 10, 15, 20])
-    plt.xlim([-2, 42])
-
-    plt.hlines(y=0, xmin=-2, xmax=42, colors='k', linestyles=[(0, (6, 6, 6, 6))])
-
-    plt.xlabel(r'$\alpha$')
-    plt.ylabel('Magnitude (a.u.)')
-    plt.title(str(s_title_t1))
-
-    plt.legend([r'$x_{PP}^* + x_{PP}^{*`}r_P - 1$', r'$x_{EP}^* + x_{EP}^{*`}r_P - 1$'], loc='upper left')
-
-    plt.savefig(str(s_title_1) + '.png')
-    plt.close()
-
-    # plot K_SV_PPD and K_SV_PED (Fig. S5 C)
-    plt.figure()
-
-    s_title_t1 = 'Change in K_STP components'
-    s_title_1 = 'Change_in_K_STP_components_'
-
-    plt.plot(l_k_SV_PPD)
-    plt.plot(l_k_SV_PED)
-
-    plt.yticks([-1, -0.5, 0, 0.5, 1])
-    plt.ylim([-1.0, 1.0])
-
-    plt.xticks([0, 10, 20, 30, 40], [0, 5, 10, 15, 20])
-    plt.xlim([-2, 42])
-
-    plt.hlines(y=0, xmin=-2, xmax=42, colors='k', linestyles=[(0, (6, 6, 6, 6))])
-
-    plt.xlabel(r'$\alpha$')
-    plt.ylabel('Magnitude (a.u.)')
-    plt.title(str(s_title_t1))
-
-    plt.legend([r'$\mathbf{K}_{SV}^{\text{PPD}}', r'$\mathbf{K}_{SV}^{\text{PED}}'], loc='upper right')
-
-    plt.savefig(str(s_title_1) + '.png')
-    plt.close()
-
-
-
+plt.legend(['PV', 'PV non-plastic'], loc='best')
+plt.savefig('Fig_S5B.png')

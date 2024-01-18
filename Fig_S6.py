@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # increase the figure size
-plt.rcParams['figure.figsize'] = [10, 10]
+plt.rcParams['figure.figsize'] = [12, 10]
 
 # remove the top and right spines from plot in the global plt setting
 plt.rcParams['axes.spines.top'] = False
@@ -68,7 +68,6 @@ alpha_e, alpha_p, alpha_s, alpha_v = 1.0, 1.0, 1.0, 1.0
 
 l_alpha = np.arange(0,20.1,1)
 c = 0
-
 
 l_eig_E, l_eig_E_VIP = [], []
 
@@ -146,8 +145,8 @@ for k, alpha in enumerate(l_alpha):
         J_E_VIP[1, 1] = (-Jvv - 1) / tau_v
 
 
-        if i == 69999:
-            eig_E_VIP, _ = np.linalg.eig(J_E_VIP)
+        if i == 49999:
+            eig_E_VIP = np.linalg.eig(J_E_VIP)[0]
             l_eig_E_VIP.append(max(np.real(eig_E_VIP)))
 
             l_eig_E.append((Jee - 1) /tau_e)
@@ -164,7 +163,7 @@ l_eig_E = np.asarray(l_eig_E)
 # plot the leading eigenvalues of the E and the E-VIP subnetwork
 plt.figure()
 plt.plot(l_eig_E)
-plt.plot(l_eig_E_VIP)
+plt.plot(l_eig_E_VIP, '--')
 
 plt.xticks([0, 5, 10, 15, 20])
 plt.yticks([-30, -15, 0, 15, 30])
@@ -173,11 +172,11 @@ plt.ylabel('Leading eigenvalue')
 plt.xlim([-1, 21])
 plt.ylim([-30, 30])
 
-plt.legend(['E-E', 'E-VIP'], loc='upper right')
+plt.legend(['E subnetwork', 'E-VIP subnetwork'], loc='upper right')
 
-plt.hlines(y=0, xmin=-1, xmax=21, colors='k', linestyles=[(0, (6, 6, 6, 6))])
+plt.axhline(y=0, color='k', linestyle='--')
 
-plt.savefig('Eigenvalue_E_E_VIP.png')
+plt.savefig('Fig_S6.png')
 plt.close()
 
 

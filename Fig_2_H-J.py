@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # increase the figure size
-plt.rcParams['figure.figsize'] = [10, 10]
+plt.rcParams['figure.figsize'] = [12, 10]
 
 # remove the top and right spines from plot in the global plt setting
 plt.rcParams['axes.spines.top'] = False
@@ -61,7 +61,6 @@ Jvp = 0.4
 Jvs = 0.4
 Jvv = 0
 
-
 c = 3
 
 l_alpha = np.arange(0,20.1,.5)
@@ -107,23 +106,18 @@ for index, alpha in enumerate(l_alpha):
         r_v = r_v * (r_v > 0)
 
         # STD
-        x_ep_pre = np.copy(x_ep)
         x_ep = x_ep + ((1 - x_ep) / tau_x - u_s * x_ep * r_p) * dt
         x_ep = np.clip(x_ep, 0, 1)
 
-        x_pp_pre = np.copy(x_pp)
         x_pp = x_pp + ((1 - x_pp) / tau_x - u_s * x_pp * r_p) * dt
         x_pp = np.clip(x_pp, 0, 1)
 
-        x_vp_pre = np.copy(x_vp)
         x_vp = x_vp + ((1 - x_vp) / tau_x - u_s * x_vp * r_p) * dt
         x_vp = np.clip(x_vp, 0, 1)
 
         # STF
-        u_vs_pre = np.copy(u_vs)
         u_vs = u_vs + ((1 - u_vs) / tau_u + U * (U_max - u_vs) * r_s) * dt
         u_vs = np.clip(u_vs, 1, U_max)
-
 
         # input to E
         inh_e_p = -x_ep * Jep * r_p
@@ -151,16 +145,15 @@ for index, alpha in enumerate(l_alpha):
     l_e_e = np.array(l_e_e)
     l_sum = np.array(l_sum)
 
-
-    # input to E plot at low and high baseline states (Fig. 2E, F)
+    # input to E plot at low and high baseline states (Fig. 2H, I)
     if (alpha == 0 or alpha == 15):
         plt.figure()
 
         plt.plot(l_e_e)
-        plt.plot(l_inh_e)
-        plt.plot(l_sum)
+        plt.plot(l_inh_e, color='red')
+        plt.plot(l_sum, color='purple')
         
-        plt.hlines(y=0, xmin=30000, xmax=90000, colors='k', linestyles=[(0, (6, 6, 6, 6))])
+        plt.axhline(y=0, color='k', linestyle='--')
 
         plt.xticks(np.arange(30000, 90000 + 5000, 20000), np.arange(0, 6 + 0.5, 2))
         plt.xlim([30000, 90000])
@@ -171,30 +164,32 @@ for index, alpha in enumerate(l_alpha):
         plt.legend(['E', 'I', 'E+I'], loc='upper left')
 
         if alpha == 0:
+            plt.hlines(y=7.9, xmin=50000, xmax=70000, color='gray')
+            
             plt.title('Low baseline state')
 
             plt.yticks([-8, -4, 0, 4, 8])
             plt.ylim([-8, 8])
 
-            plt.savefig('Low_baseline_input_to_E.png')
+            plt.savefig('Fig_2H.png')
             plt.close()
         else:
+            plt.hlines(y=59.9, xmin=50000, xmax=70000, color='gray')
             plt.title('High baseline state')
             plt.yticks([-40, -20, 0, 20, 40, 60])
             plt.ylim([-40, 60])
 
-            plt.savefig('High_baseline__input_to_E.png')
+            plt.savefig('Fig_2I.png')
             plt.close()
 
-# difference in input to E between baseline and top-down stimulation (Fig. 2G)
+# difference in input to E between baseline and top-down stimulation (Fig. 2J)
 plt.figure()
 
 s_title_t1 = 'Input to E stim-baseline'
-s_title_1 = 'Input_to_E_stim_baseline'
 
 plt.plot(e_high - e_low)
-plt.plot(inh_total_high - inh_total_low)
-plt.plot(sum_high - sum_low)
+plt.plot(inh_total_high - inh_total_low, color='red')
+plt.plot(sum_high - sum_low, color='purple')
 
 plt.yticks([-10, 0, 10, 20, 30, 40])
 plt.ylim([-10, 40])
@@ -202,14 +197,14 @@ plt.ylim([-10, 40])
 plt.xticks([0, 10, 20, 30, 40], [0, 5, 10, 15, 20])
 plt.xlim([-2, 42])
 
-plt.hlines(y=0, xmin=-2, xmax=42, colors='k', linestyles=[(0, (6, 6, 6, 6))])
+plt.axhline(y=0, color='k', linestyle='--')
 
 plt.xlabel(r'$\alpha$')
 plt.ylabel('Change in input to E (a.u.)')
 plt.title(str(s_title_t1))
 
-plt.legend(['E', 'I', 'E+I'], loc='upper right')
+plt.legend(['E', 'I', 'E+I'], loc='upper left')
 
-plt.savefig(str(s_title_1) + str(c) + '.png')
+plt.savefig('Fig_2J.png')
 plt.close()
 

@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # increase the figure size
-plt.rcParams['figure.figsize'] = [10, 10]
+plt.rcParams['figure.figsize'] = [12, 10]
 
 # remove the top and right spines from plot in the global plt setting
 plt.rcParams['axes.spines.top'] = False
@@ -152,12 +152,10 @@ for b_STP in l_b_STP:
 
         # plotting
         s_title_1 = 'top_down_modulation'
+        s_title_t1 = 'top down modulation'
 
-        s_title_2 = 'with_STP'
-        s_title_t2 = 'with STP'
-
-        # network activity with iSTP mechanisms for low and high baseline (Fig. 2B and 2C)
-        if (alpha == 0 or alpha == 15) and b_STP:
+        # network activity with and iSTP mechanisms for low and high baseline states (Fig. 2B,C,E,F)
+        if (alpha == 0 or alpha == 15):
             plt.figure()
 
             plt.plot(l_r_e)
@@ -165,45 +163,81 @@ for b_STP in l_b_STP:
             plt.plot(l_r_s)
             plt.plot(l_r_v)
 
-            plt.hlines(y=np.mean(l_r_s[35000:45000]), xmin=30000, xmax=90000, colors='k', linestyles=[(0, (6, 6, 6, 6))])
+            plt.axhline(y=np.mean(l_r_s[35000:45000]), color='k', linestyle='--')
 
             plt.xticks(np.arange(30000, 90000 + 5000, 20000), np.arange(0, 6 + 0.5, 2))
             plt.xlim([30000, 90000])
             plt.xlabel('Time (s)')
-            plt.ylabel('Firing rate (Hz)')
+            plt.ylabel('Firing rate (a.u.)')
 
             plt.legend(['E', 'PV', 'SST', 'VIP'], loc='upper left')
 
+                
             if alpha == 0:
+                plt.hlines(y=14.9, xmin=50000, xmax=70000, color='gray')
                 plt.yticks([0, 5, 10, 15])
                 plt.ylim([0, 15])
-                plt.title('Low baseline ' + str(s_title_t2))
-                plt.savefig('Low_baseline_' + str(s_title_1) + '_' + str(s_title_2) + '.png')
-                plt.close()
+                if b_STP:
+                    s_title_2 = 'with_STP'
+                    s_title_t2 = 'with STP'
+                    plt.title('Low baseline ' + str(s_title_t2))
+                    plt.savefig('Fig_2B.png')
+                    plt.close()
+                else:
+                    s_title_2 = 'without_STP'
+                    s_title_t2 = 'without STP'
+                    plt.title('Low baseline ' + str(s_title_t2))
+                    plt.savefig('Fig_2E.png')
+                    plt.close()
             else:
-                plt.yticks([0, 20, 40, 60])
-                plt.ylim([0, 60])
-                plt.title('High baseline ' + str(s_title_t2))
-                plt.savefig('High_baseline_' + str(s_title_1) + '_' + str(s_title_2) + '.png')
-                plt.close()
+                if b_STP:
+                    plt.hlines(y=59.9, xmin=50000, xmax=70000, color='gray')
+                    plt.yticks([0, 20, 40, 60])
+                    plt.ylim([0, 60])
+                    plt.title('High baseline ' + str(s_title_t2))
+                    plt.savefig('Fig_2C.png')
+                    plt.close()
+                else:
+                    plt.hlines(y=14.9, xmin=50000, xmax=70000, color='gray')
+                    plt.yticks([0, 5, 10, 15])
+                    plt.ylim([0, 15])
+                    plt.title('High baseline ' + str(s_title_t2))
+                    plt.savefig('Fig_2F.png')
+                    plt.close()
+                    
 
-# Change in SST activity with and without STP mechanisms for different baseline activity levels (Fig. 2D)
+# Change in SST activity with STP mechanisms for different baseline activity levels (Fig. 2D)
 plt.figure()
-
-plt.plot(l_change_in_SST_STP)
-plt.plot(l_change_in_SST)
+plt.plot(l_change_in_SST_STP, color='gray')
 
 plt.xticks([0, 5, 10, 15, 20], [0, 5, 10, 15, 20])
 plt.yticks([-10, -5, 0, 5, 10])
 
 plt.xlabel(r'$\alpha$')
-plt.ylabel('Change in SST activity (Hz)')
+plt.ylabel('Change in SST activity (a.u.)')
 plt.xlim([-1, 21])
 plt.ylim([-10, 10])
-plt.hlines(y=0, xmin=-1, xmax=21, colors='k', linestyles=[(0, (6, 6, 6, 6))])
-plt.legend(['Network with iSTP', 'Network without iSTP'], loc='best')
+plt.axhline(y=0, color='k', linestyle='--')
+plt.title('Network with iSTP')
 
-plt.savefig('Network_change_in_SST_activity_new_weights.png')
+plt.savefig('Fig_2D.png')
+plt.close()
+
+# Change in SST activity with STP mechanisms for different baseline activity levels (Fig. 2G)
+plt.figure()
+plt.plot(l_change_in_SST, color='gray')
+
+plt.xticks([0, 5, 10, 15, 20], [0, 5, 10, 15, 20])
+plt.yticks([-10, -5, 0, 5, 10])
+
+plt.xlabel(r'$\alpha$')
+plt.ylabel('Change in SST activity (a.u.)')
+plt.xlim([-1, 21])
+plt.ylim([-10, 10])
+plt.axhline(y=0, color='k', linestyle='--')
+plt.title('Network without iSTP')
+
+plt.savefig('Fig_2G.png')
 plt.close()
 
 

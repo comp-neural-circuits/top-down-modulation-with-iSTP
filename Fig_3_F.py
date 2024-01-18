@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 
 # increase the figure size
-plt.rcParams['figure.figsize'] = [10, 10]
+plt.rcParams['figure.figsize'] = [12, 10]
 
 # remove the top and right spines from plot in the global plt setting
 plt.rcParams['axes.spines.top'] = False
@@ -209,7 +209,7 @@ for alpha in l_alpha:
             s_title_t = 'Inactive SST-to-VIP STF'
 
 
-# plot the networks with one mechanism deactivated (Fig. 4 B)
+# plot the networks with one mechanism deactivated (Fig. 3F)
 plt.figure()
 
 norm = mpl.colors.Normalize(vmin=1, vmax=10)
@@ -227,19 +227,19 @@ plt.plot(l_inactive_PV_E, color=cmap_orange.to_rgba(3+3))
 plt.plot(l_inactive_PV_PV, color=cmap_blue.to_rgba(3+3))
 plt.plot(l_inactive_PV_VIP, color=cmap_blue.to_rgba(2+3))
 plt.plot(l_inactive_SST_VIP, color=cmap_blue.to_rgba(1+3))
-plt.hlines(y=0, xmin=-1, xmax=21, colors='k', linestyles=[(0, (6, 6, 6, 6))])
+plt.axhline(y=0, color='k', linestyle='--')
 
 plt.xticks([0, 5, 10, 15, 20], [0, 5, 10, 15, 20])
 plt.yticks([-10, -5, 0, 5, 10])
 
 plt.xlabel(r'$\alpha$')
-plt.ylabel('Change in SST activity (Hz)')
+plt.ylabel('Change in SST activity (a.u.)')
 
 plt.xlim([-1, 21])
 plt.ylim([-10, 10])
 
 plt.legend(['Networks with STP', 'Inactive PV-to-E STD', 'Inactive PV-to-PV STD', 'Inactive PV-to-VIP STD', 'Inactive SST-to-VIP STF'], loc='best')
 
-plt.savefig('Individual_role_iSTP.png')
+plt.savefig('Fig_3F.png')
 plt.close()
 

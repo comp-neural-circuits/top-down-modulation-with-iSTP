@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # increase the figure size
-plt.rcParams['figure.figsize'] = [10, 10]
+plt.rcParams['figure.figsize'] = [12, 10]
 
 # remove the top and right spines from plot in the global plt setting
 plt.rcParams['axes.spines.top'] = False
@@ -144,7 +144,7 @@ for alpha in l_alpha:
     l_r_v_bs.append(np.mean(l_r_v[35000:45000]))
 
 
-# plot the results
+# Network baseline activity
 plt.figure()
 
 plt.plot(l_r_e_bs)
@@ -156,11 +156,11 @@ plt.xticks([0, 5, 10, 15, 20], [0, 5, 10, 15, 20])
 plt.yticks([0, 15, 30, 45])
 
 plt.xlabel(r'$\alpha$')
-plt.ylabel('Firing rate (Hz)')
+plt.ylabel('Firing rate (a.u.)')
 plt.xlim([-1, 21])
 plt.ylim([0, 45])
 
 plt.legend(['E', 'PV', 'SST', 'VIP'], loc='upper left')
 
-plt.savefig('Network_baseline_activity_alpha.png')
+plt.savefig('Fig_S2.png')
 plt.close()

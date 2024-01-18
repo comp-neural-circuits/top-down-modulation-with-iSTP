@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # increase the figure size
-plt.rcParams['figure.figsize'] = [10, 10]
+plt.rcParams['figure.figsize'] = [12, 10]
 
 # remove the top and right spines from plot in the global plt setting
 plt.rcParams['axes.spines.top'] = False
@@ -66,7 +66,7 @@ l_alpha = np.arange(0,20.1,1)
 l_c = [0.1, 3]
 
 
-for k, c in enumerate(l_c):
+for c in l_c:
     l_R_SV = []
     l_SST_change = []
     l_R_SV_non_STP = []
@@ -192,29 +192,29 @@ for k, c in enumerate(l_c):
     plt.figure()
 
     plt.plot(l_SST_change)
-    plt.plot(l_R_SV)
+    plt.plot(l_R_SV, '--')
 
-    plt.hlines(y=0, xmin=-1, xmax=21, colors='k', linestyles=[(0, (6, 6, 6, 6))])
+    plt.axhline(y=0, color='k', linestyle='--')
 
     plt.xticks([0, 5, 10, 15, 20], [0, 5, 10, 15, 20])
     plt.xlim([-1, 21])
 
     plt.xlabel(r'$\alpha$')
-    plt.ylabel('Change in SST activity (Hz)')
+    plt.ylabel('Change in SST activity (a.u.)')
 
-    plt.legend(['simulation', 'analytics'], loc='lower right')
+    plt.legend(['simulation', r'analytics $\mathbf{R}_{SV}$'], loc='lower right')
 
     if c == 0.1:
         plt.yticks(np.array([-0.2, -0.1, 0, 0.1, 0.2]))
         plt.ylim([-0.2, 0.2])
         plt.title('Small perturbation')
-        plt.savefig('Low_perturbation_SST_change_vs_R_SV.png')
+        plt.savefig('Fig_3A.png')
         plt.close()
     else:
         plt.yticks(np.array([-10, -5, 0, 5, 10]))
         plt.ylim([-10, 10])
         plt.title('Large perturbation')
-        plt.savefig('High_perturbation_SST_change_vs_R_SV.png')
+        plt.savefig('Fig_3B.png')
         plt.close()
 
     # plot R_SV_STP and R_SV_nonSTP vs alpha for different perturbation (Fig. 3 C,D)
@@ -230,7 +230,7 @@ for k, c in enumerate(l_c):
     plt.xlim([-1, 21])
 
     plt.xlabel(r'$\alpha$')
-    plt.ylabel('Contribution to the change \n in SST activity (Hz)')
+    plt.ylabel('Contribution to the change \n in SST activity (a.u.)')
 
     plt.legend(['SST activity', r'$\mathbf{R}_{SV}^{\text{nonSTP}}$', r'$\mathbf{R}_{SV}^{\text{STP}}$'], loc='upper left')
 
@@ -238,12 +238,12 @@ for k, c in enumerate(l_c):
         plt.yticks(np.array([-1, -0.5, 0, 0.5, 1]))
         plt.ylim([-1, 1])
         plt.title('Small perturbation')
-        plt.savefig('Low_perturbation_R_SV_STP_vs_R_SV_nonSTP.png')
+        plt.savefig('Fig_3C.png')
         plt.close()
     else:
         plt.yticks(np.array([-30, -15, 0, 15, 30]))
         plt.ylim([-30, 30])
         plt.title('Large perturbation')
-        plt.savefig('High_perturbation_R_SV_STP_vs_R_SV_nonSTP.png')
+        plt.savefig('Fig_3D.png')
         plt.close()
 

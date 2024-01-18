@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # increase the figure size
-plt.rcParams['figure.figsize'] = [10, 10]
+plt.rcParams['figure.figsize'] = [12, 10]
 
 # remove the top and right spines from plot in the global plt setting
 plt.rcParams['axes.spines.top'] = False
@@ -118,20 +118,16 @@ for alpha in l_alpha:
         r_v = r_v * (r_v > 0)
 
         # STD
-        x_ep_pre = np.copy(x_ep)
         x_ep = x_ep + ((1 - x_ep) / tau_x - u_s * x_ep * r_p) * dt
         x_ep = np.clip(x_ep, 0, 1)
 
-        x_pp_pre = np.copy(x_pp)
         x_pp = x_pp + ((1 - x_pp) / tau_x - u_s * x_pp * r_p) * dt
         x_pp = np.clip(x_pp, 0, 1)
 
-        x_vp_pre = np.copy(x_vp)
         x_vp = x_vp + ((1 - x_vp) / tau_x - u_s * x_vp * r_p) * dt
         x_vp = np.clip(x_vp, 0, 1)
 
         # STF
-        u_vs_pre = np.copy(u_vs)
         u_vs = u_vs + ((1 - u_vs) / tau_u + U * (U_max - u_vs) * r_s) * dt
         u_vs = np.clip(u_vs, 1, U_max)
 
@@ -193,13 +189,13 @@ for alpha in l_alpha:
     l_R_SV_PED.append(np.mean(l_R_SV_PED_temp))
     l_R_SV_PPD.append(np.mean(l_R_SV_PPD_temp))
 
-# plot the components of R_SV for different bottom-up inputs (Fig. 4 A)
+# plot the components of R_SV for different bottom-up inputs (Fig. 3E)
 plt.figure()
 
-plt.plot(l_R_SV_PED, '--')
-plt.plot(l_R_SV_PPD, '--')
-plt.plot(l_R_SV_STP, '--')
-plt.plot(l_SST_change)
+plt.plot(l_R_SV_PED, '--', color='green')
+plt.plot(l_R_SV_PPD, '--', color='orange')
+plt.plot(l_R_SV_STP, '--', color='red')
+plt.plot(l_SST_change, color='blue')
 
 plt.hlines(y=0, xmin=-1, xmax=21, colors='k', linestyles=[(0, (6, 6, 6, 6))])
 
@@ -209,9 +205,9 @@ plt.yticks(np.array([-1, -0.5, 0, 0.5, 1]))
 plt.ylim([-1, 1])
 
 plt.xlabel(r'$\alpha$')
-plt.ylabel('Contribution to the change \n in SST activity (Hz)')
+plt.ylabel('Contribution to the change \n in SST activity (a.u.)')
 
 plt.legend([r'$\mathbf{R}_{SV}^{\text{PED}}$', r'$\mathbf{R}_{SV}^{\text{PPD}}$', r'$\mathbf{R}_{SV}^{\text{STP}}$', 'SST activity'], loc='upper left')
 
-plt.savefig('Low_perturbation_SST_change_vs_R_SV.png')
+plt.savefig('Fig_3E.png')
 plt.close()
