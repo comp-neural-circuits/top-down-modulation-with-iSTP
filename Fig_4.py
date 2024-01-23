@@ -1,38 +1,39 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+
 pal = sns.color_palette("deep")
 
 # increase the figure size
-plt.rcParams['figure.figsize'] = [12, 10]
+plt.rcParams["figure.figsize"] = [12, 10]
 
 # remove the top and right spines from plot in the global plt setting
-plt.rcParams['axes.spines.top'] = False
-plt.rcParams['axes.spines.right'] = False
+plt.rcParams["axes.spines.top"] = False
+plt.rcParams["axes.spines.right"] = False
 # change the linewidth of the axes and spines
-plt.rcParams['axes.linewidth'] = 2
-plt.rcParams['lines.linewidth'] = 4
-plt.rcParams['xtick.major.size'] = 10
-plt.rcParams['xtick.major.width'] = 2
-plt.rcParams['ytick.major.size'] = 10
-plt.rcParams['ytick.major.width'] = 2
-plt.rcParams['xtick.minor.size'] = 5
-plt.rcParams['xtick.minor.width'] = 2
-plt.rcParams['ytick.minor.size'] = 5
-plt.rcParams['ytick.minor.width'] = 2
+plt.rcParams["axes.linewidth"] = 2
+plt.rcParams["lines.linewidth"] = 4
+plt.rcParams["xtick.major.size"] = 10
+plt.rcParams["xtick.major.width"] = 2
+plt.rcParams["ytick.major.size"] = 10
+plt.rcParams["ytick.major.width"] = 2
+plt.rcParams["xtick.minor.size"] = 5
+plt.rcParams["xtick.minor.width"] = 2
+plt.rcParams["ytick.minor.size"] = 5
+plt.rcParams["ytick.minor.width"] = 2
 # change the fontsize of the ticks label
-plt.rcParams['xtick.labelsize'] = 20
-plt.rcParams['ytick.labelsize'] = 20
+plt.rcParams["xtick.labelsize"] = 20
+plt.rcParams["ytick.labelsize"] = 20
 # change the fontsize of the axes label
-plt.rcParams['axes.labelsize'] = 20
+plt.rcParams["axes.labelsize"] = 20
 # change the fontsize of the legend
-plt.rcParams['legend.fontsize'] = 20
+plt.rcParams["legend.fontsize"] = 20
 # change the fontsize of the title
-plt.rcParams['axes.titlesize'] = 20
+plt.rcParams["axes.titlesize"] = 20
 # change the title font size
-plt.rcParams['font.size'] = 20
+plt.rcParams["font.size"] = 20
 # change the font family to Arial
-plt.rcParams['font.family'] = 'Arial'
+plt.rcParams["font.family"] = "Arial"
 
 
 # simulation setup
@@ -67,12 +68,16 @@ Jvv = 0
 c = 3
 
 l_alpha = np.arange(0, 20.5, 0.5)
-m_r_e_SST, m_r_p_SST, m_r_s_SST, m_r_v_SST = np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T))
+m_r_e_SST, m_r_p_SST, m_r_s_SST, m_r_v_SST = (
+    np.zeros((len(l_alpha), T)),
+    np.zeros((len(l_alpha), T)),
+    np.zeros((len(l_alpha), T)),
+    np.zeros((len(l_alpha), T)),
+)
 l_R_SS, l_R_SV = [], []
 
 # standard experimental setup -- VIP perturbation
 for k, alpha in enumerate(l_alpha):
-
     # depression variables
     x_ep, x_pp, x_vp = 1, 1, 1
     u_s = 1
@@ -131,12 +136,12 @@ for k, alpha in enumerate(l_alpha):
         u_vs = np.clip(u_vs, 1, U_max)
 
         # derivatives of plasticity parameters
-        p_pp = 1 / (1+u_s*tau_x *r_p)
-        p_pp_prime = - (u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
-        p_ep = 1 / (1+u_s*tau_x *r_p)
-        p_ep_prime = - (u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
-        p_vp = 1 / (1+u_s*tau_x *r_p)
-        p_vp_prime = - (u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
+        p_pp = 1 / (1 + u_s * tau_x * r_p)
+        p_pp_prime = -(u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
+        p_ep = 1 / (1 + u_s * tau_x * r_p)
+        p_ep_prime = -(u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
+        p_vp = 1 / (1 + u_s * tau_x * r_p)
+        p_vp_prime = -(u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
         p_vs = (1 + U * U_max * tau_u * r_s) / (1 + U * tau_u * r_s)
         p_vs_prime = (U * (U_max - 1) * tau_u) / np.power(1 + U * tau_u * r_s, 2)
 
@@ -148,17 +153,45 @@ for k, alpha in enumerate(l_alpha):
 
         if i == 49999:
             mat_R = np.array(
-                [[1-Jee, (p_ep + p_ep_prime * r_p) * Jep, Jes, Jev],
-                [-Jpe, 1 + (p_pp + p_pp_prime * r_p) * Jpp, Jps, Jpv],
-                [-Jse, Jsp, 1+Jss, Jsv],
-                [-Jve, (p_vp + p_vp_prime * r_p) * Jvp, (p_vs + p_vs_prime * r_s) * Jvs, 1 + Jvv]
+                [
+                    [1 - Jee, (p_ep + p_ep_prime * r_p) * Jep, Jes, Jev],
+                    [-Jpe, 1 + (p_pp + p_pp_prime * r_p) * Jpp, Jps, Jpv],
+                    [-Jse, Jsp, 1 + Jss, Jsv],
+                    [
+                        -Jve,
+                        (p_vp + p_vp_prime * r_p) * Jvp,
+                        (p_vs + p_vs_prime * r_s) * Jvs,
+                        1 + Jvv,
+                    ],
                 ]
             )
 
             det_R = np.linalg.det(mat_R)
 
-            R_SV = 1/det_R * ((p_pp + p_pp_prime * r_p) * Jee * Jpp * Jsv - (p_ep + p_ep_prime * r_p) * Jsv * Jpe * Jep - (p_pp + p_pp_prime * r_p) * Jpp * Jsv + Jee * Jsv - Jsv) * c
-            R_SS = 1/det_R * ((p_ep + p_ep_prime * r_p) * Jpe * Jep - (p_pp + p_pp_prime * r_p) * Jee * Jpp + (p_pp + p_pp_prime * r_p) * Jpp - Jee + 1) * c
+            R_SV = (
+                1
+                / det_R
+                * (
+                    (p_pp + p_pp_prime * r_p) * Jee * Jpp * Jsv
+                    - (p_ep + p_ep_prime * r_p) * Jsv * Jpe * Jep
+                    - (p_pp + p_pp_prime * r_p) * Jpp * Jsv
+                    + Jee * Jsv
+                    - Jsv
+                )
+                * c
+            )
+            R_SS = (
+                1
+                / det_R
+                * (
+                    (p_ep + p_ep_prime * r_p) * Jpe * Jep
+                    - (p_pp + p_pp_prime * r_p) * Jee * Jpp
+                    + (p_pp + p_pp_prime * r_p) * Jpp
+                    - Jee
+                    + 1
+                )
+                * c
+            )
 
             l_R_SV.append(R_SV)
             l_R_SS.append(R_SS)
@@ -233,22 +266,6 @@ for k, alpha in enumerate(l_alpha):
         l_r_s.append(r_s)
         l_r_v.append(r_v)
 
-        # derivatives of plasticity parameters
-        p_pp = 1 / (1+u_s*tau_x *r_p)
-        p_pp_prime = - (u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
-        p_ep = 1 / (1+u_s*tau_x *r_p)
-        p_ep_prime = - (u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
-        p_vp = 1 / (1+u_s*tau_x *r_p)
-        p_vp_prime = - (u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
-        p_vs = (1 + U * U_max * tau_u * r_s) / (1 + U * tau_u * r_s)
-        p_vs_prime = (U * (U_max - 1) * tau_u) / np.power(1 + U * tau_u * r_s, 2)
-
-        x_ep_ss = 1 / (1 + u_s * tau_x * r_p)
-        x_pp_ss = 1 / (1 + u_s * tau_x * r_p)
-        x_vp_ss = 1 / (1 + u_s * tau_x * r_p)
-
-        u_vs_ss = (1 + U * U_max * tau_u * r_s) / (1 + U * tau_u * r_s)
-
     l_r_e = np.asarray(l_r_e)
     l_r_p = np.asarray(l_r_p)
     l_r_s = np.asarray(l_r_s)
@@ -260,58 +277,58 @@ for k, alpha in enumerate(l_alpha):
     m_r_v_SST[k] = l_r_v
 
 # R_SS and R_SV values vs alpha (Fig. 4A)
-fig = plt.subplots(figsize=(20,10))
+fig = plt.subplots(figsize=(20, 10))
 
 plt.plot(l_R_SV, color=pal[1])
 plt.plot(l_R_SS, color=pal[2])
 
-plt.plot(0, l_R_SV[0], color=pal[1], marker='^', markersize=20)
-plt.plot(0, l_R_SS[0], color=pal[2], marker='^', markersize=20)
+plt.plot(0, l_R_SV[0], color=pal[1], marker="^", markersize=20)
+plt.plot(0, l_R_SS[0], color=pal[2], marker="^", markersize=20)
 
-plt.plot(30, l_R_SV[30], color=pal[1], marker='o', markersize=20)
-plt.plot(30, l_R_SS[30], color=pal[2], marker='o', markersize=20)
+plt.plot(30, l_R_SV[30], color=pal[1], marker="o", markersize=20)
+plt.plot(30, l_R_SS[30], color=pal[2], marker="o", markersize=20)
 
-plt.axhline(y=0, color='k', linestyle='--')
+plt.axhline(y=0, color="k", linestyle="--")
 
 plt.yticks([-10, -5, 0, 5, 10])
 plt.ylim([-10, 10])
-plt.ylabel('$\mathbf{R}_{ij}$ magnitude (a.u.)')
+plt.ylabel("$\mathbf{R}_{ij}$ magnitude (a.u.)")
 
 plt.xticks([0, 10, 20, 30, 40], [0, 5, 10, 15, 20])
 plt.xlim([-2, 42])
-plt.xlabel(r'$\alpha$')
+plt.xlabel(r"$\alpha$")
 
-plt.legend(['$\mathbf{R}_{SV}$', '$\mathbf{R}_{SS}$'], loc='best')
-plt.savefig('Fig_4A.png')
+plt.legend(["$\mathbf{R}_{SV}$", "$\mathbf{R}_{SS}$"], loc="best")
+plt.savefig("Fig_4A.png")
 plt.close()
 
 # example activity plots SST perturbation -- paradoxical effect (Fig. 4B)
 for i in [0, 30]:
     plt.figure()
 
-    plt.plot(m_r_e_SST[i]/m_r_e_SST[i][40000], color=pal[0])
-    plt.plot(m_r_p_SST[i]/m_r_p_SST[i][40000], color=pal[1])
-    plt.plot(m_r_s_SST[i]/m_r_s_SST[i][40000], color=pal[2])
-    plt.plot(m_r_v_SST[i]/m_r_v_SST[i][40000], color=pal[3])
+    plt.plot(m_r_e_SST[i] / m_r_e_SST[i][40000], color=pal[0])
+    plt.plot(m_r_p_SST[i] / m_r_p_SST[i][40000], color=pal[1])
+    plt.plot(m_r_s_SST[i] / m_r_s_SST[i][40000], color=pal[2])
+    plt.plot(m_r_v_SST[i] / m_r_v_SST[i][40000], color=pal[3])
 
-    plt.axhline(y=1, color='k', linestyle='--')
-    plt.hlines(y=1.19, xmin=50000, xmax=70000, color='gray')
+    plt.axhline(y=1, color="k", linestyle="--")
+    plt.hlines(y=1.19, xmin=50000, xmax=70000, color="gray")
 
     plt.xticks(np.arange(30000, 90000 + 5000, 20000), np.arange(0, 7, 2))
     plt.xlim([30000, 90000])
-    plt.xlabel('Time (s)')
+    plt.xlabel("Time (s)")
 
     plt.yticks([0.8, 0.9, 1, 1.1, 1.2])
     plt.ylim([0.8, 1.2])
-    plt.ylabel('Normalized activity')
+    plt.ylabel("Normalized activity")
 
-    plt.legend(['E', 'PV', 'SST', 'VIP'], loc='upper right')
+    plt.legend(["E", "PV", "SST", "VIP"], loc="upper right")
 
-    if i==0:
-        plt.title('Low baseline network activity')
-        plt.savefig('Fig_4B_left.png')
+    if i == 0:
+        plt.title("Low baseline network activity")
+        plt.savefig("Fig_4B_left.png")
         plt.close()
-    if i==30:
-        plt.title('High baseline network activity')
-        plt.savefig('Fig_4B_right.png')
+    if i == 30:
+        plt.title("High baseline network activity")
+        plt.savefig("Fig_4B_right.png")
         plt.close()

@@ -2,35 +2,35 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # increase the figure size
-plt.rcParams['figure.figsize'] = [12, 10]
+plt.rcParams["figure.figsize"] = [12, 10]
 
 # remove the top and right spines from plot in the global plt setting
-plt.rcParams['axes.spines.top'] = False
-plt.rcParams['axes.spines.right'] = False
+plt.rcParams["axes.spines.top"] = False
+plt.rcParams["axes.spines.right"] = False
 # change the linewidth of the axes and spines
-plt.rcParams['axes.linewidth'] = 2
-plt.rcParams['lines.linewidth'] = 4
-plt.rcParams['xtick.major.size'] = 10
-plt.rcParams['xtick.major.width'] = 2
-plt.rcParams['ytick.major.size'] = 10
-plt.rcParams['ytick.major.width'] = 2
-plt.rcParams['xtick.minor.size'] = 5
-plt.rcParams['xtick.minor.width'] = 2
-plt.rcParams['ytick.minor.size'] = 5
-plt.rcParams['ytick.minor.width'] = 2
+plt.rcParams["axes.linewidth"] = 2
+plt.rcParams["lines.linewidth"] = 4
+plt.rcParams["xtick.major.size"] = 10
+plt.rcParams["xtick.major.width"] = 2
+plt.rcParams["ytick.major.size"] = 10
+plt.rcParams["ytick.major.width"] = 2
+plt.rcParams["xtick.minor.size"] = 5
+plt.rcParams["xtick.minor.width"] = 2
+plt.rcParams["ytick.minor.size"] = 5
+plt.rcParams["ytick.minor.width"] = 2
 # change the fontsize of the ticks label
-plt.rcParams['xtick.labelsize'] = 20
-plt.rcParams['ytick.labelsize'] = 20
+plt.rcParams["xtick.labelsize"] = 20
+plt.rcParams["ytick.labelsize"] = 20
 # change the fontsize of the axes label
-plt.rcParams['axes.labelsize'] = 20
+plt.rcParams["axes.labelsize"] = 20
 # change the fontsize of the legend
-plt.rcParams['legend.fontsize'] = 20
+plt.rcParams["legend.fontsize"] = 20
 # change the fontsize of the title
-plt.rcParams['axes.titlesize'] = 20
+plt.rcParams["axes.titlesize"] = 20
 # change the title font size
-plt.rcParams['font.size'] = 20
+plt.rcParams["font.size"] = 20
 # change the font family to Arial
-plt.rcParams['font.family'] = 'Arial'
+plt.rcParams["font.family"] = "Arial"
 
 # simulation setup
 dt = 0.0001
@@ -99,7 +99,7 @@ for factor in l_factor:
 
     l_r_e, l_r_p, l_r_s, l_r_v = [], [], [], []
     l_R_SV_temp = []
-    
+
     for i in range(T):
         if 50000 <= i < 70000:
             g_e, g_p, g_s, g_v = g_1 + factor, g_1 + factor, g_2, g_1 + c + 1
@@ -160,19 +160,19 @@ for factor in l_factor:
 
         u_sv = u_sv + ((1 - u_sv) / tau_u + u_f_sv * (U_max - u_sv) * r_v) * dt
         u_sv = np.clip(u_sv, 1, U_max)
-            
+
         l_r_e.append(r_e)
         l_r_p.append(r_p)
         l_r_s.append(r_s)
         l_r_v.append(r_v)
-        
+
     l_r_e = np.asarray(l_r_e)
     l_r_p = np.asarray(l_r_p)
     l_r_s = np.asarray(l_r_s)
     l_r_v = np.asarray(l_r_v)
 
     l_SST_change.append(np.mean(l_r_s[65000:70000]) - np.mean(l_r_s[40000:45000]))
-    
+
     # Network responses to the perturbation (Fig. S10A, B)
     if factor in [0, 20]:
         plt.figure()
@@ -186,15 +186,15 @@ for factor in l_factor:
 
         if factor == 0:
             plt.yticks([0, 5, 10, 15])
-            s_title = 'Low baseline state'
+            s_title = "Low baseline state"
         else:
             plt.yticks([0, 5, 10, 15, 20])
-            s_title = 'High baseline state'
+            s_title = "High baseline state"
 
-        plt.xlabel('Time (s)')
-        plt.ylabel('Firing rate (a.u.)')
+        plt.xlabel("Time (s)")
+        plt.ylabel("Firing rate (a.u.)")
         plt.title(str(s_title))
-        plt.axhline(y=np.mean(l_r_s[35000:45000]), color='k', linestyle='--')
+        plt.axhline(y=np.mean(l_r_s[35000:45000]), color="k", linestyle="--")
         plt.xlim([30000, 90000])
 
         if factor == 0:
@@ -202,30 +202,30 @@ for factor in l_factor:
         else:
             plt.ylim([0, 20])
 
-        plt.legend(['E', 'PV', 'SST', 'VIP'], loc='upper right')
+        plt.legend(["E", "PV", "SST", "VIP"], loc="upper right")
 
         if factor == 0:
-            plt.hlines(y=14.9, xmin=50000, xmax=70000, color='gray')
-            plt.savefig('Fig_S10A.png')
+            plt.hlines(y=14.9, xmin=50000, xmax=70000, color="gray")
+            plt.savefig("Fig_S10A.png")
         else:
-            plt.hlines(y=19.9, xmin=50000, xmax=70000, color='gray')
-            plt.savefig('Fig_S10B.png')
+            plt.hlines(y=19.9, xmin=50000, xmax=70000, color="gray")
+            plt.savefig("Fig_S10B.png")
         plt.close()
 
 # Change in SST activity (Fig. S10C)
 plt.figure()
 
-plt.plot(l_SST_change, color='gray')
-plt.axhline(y=0, color='k', linestyle='--')
+plt.plot(l_SST_change, color="gray")
+plt.axhline(y=0, color="k", linestyle="--")
 
 plt.xticks([0, 10, 20, 30, 40], [0, 5, 10, 15, 20])
 plt.xlim([-2, 42])
 
-plt.yticks([-1, -0.5, 0, .5, 1.0])
+plt.yticks([-1, -0.5, 0, 0.5, 1.0])
 plt.ylim([-1.0, 1.0])
 
-plt.xlabel(r'$\alpha$')
-plt.ylabel('Change in SST activity (a.u.)')
+plt.xlabel(r"$\alpha$")
+plt.ylabel("Change in SST activity (a.u.)")
 
-plt.title(r'Large perturbation (large $\delta g_V$)')
-plt.savefig('Fig_S10C.png')
+plt.title(r"Large perturbation (large $\delta g_V$)")
+plt.savefig("Fig_S10C.png")

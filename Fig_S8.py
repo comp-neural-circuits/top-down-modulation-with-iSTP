@@ -1,38 +1,39 @@
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+
 pal = sns.color_palette("deep")
 
 # increase the figure size
-plt.rcParams['figure.figsize'] = [12, 10]
+plt.rcParams["figure.figsize"] = [12, 10]
 
 # remove the top and right spines from plot in the global plt setting
-plt.rcParams['axes.spines.top'] = False
-plt.rcParams['axes.spines.right'] = False
+plt.rcParams["axes.spines.top"] = False
+plt.rcParams["axes.spines.right"] = False
 # change the linewidth of the axes and spines
-plt.rcParams['axes.linewidth'] = 2
-plt.rcParams['lines.linewidth'] = 4
-plt.rcParams['xtick.major.size'] = 10
-plt.rcParams['xtick.major.width'] = 2
-plt.rcParams['ytick.major.size'] = 10
-plt.rcParams['ytick.major.width'] = 2
-plt.rcParams['xtick.minor.size'] = 5
-plt.rcParams['xtick.minor.width'] = 2
-plt.rcParams['ytick.minor.size'] = 5
-plt.rcParams['ytick.minor.width'] = 2
+plt.rcParams["axes.linewidth"] = 2
+plt.rcParams["lines.linewidth"] = 4
+plt.rcParams["xtick.major.size"] = 10
+plt.rcParams["xtick.major.width"] = 2
+plt.rcParams["ytick.major.size"] = 10
+plt.rcParams["ytick.major.width"] = 2
+plt.rcParams["xtick.minor.size"] = 5
+plt.rcParams["xtick.minor.width"] = 2
+plt.rcParams["ytick.minor.size"] = 5
+plt.rcParams["ytick.minor.width"] = 2
 # change the fontsize of the ticks label
-plt.rcParams['xtick.labelsize'] = 20
-plt.rcParams['ytick.labelsize'] = 20
+plt.rcParams["xtick.labelsize"] = 20
+plt.rcParams["ytick.labelsize"] = 20
 # change the fontsize of the axes label
-plt.rcParams['axes.labelsize'] = 20
+plt.rcParams["axes.labelsize"] = 20
 # change the fontsize of the legend
-plt.rcParams['legend.fontsize'] = 20
+plt.rcParams["legend.fontsize"] = 20
 # change the fontsize of the title
-plt.rcParams['axes.titlesize'] = 20
+plt.rcParams["axes.titlesize"] = 20
 # change the title font size
-plt.rcParams['font.size'] = 20
+plt.rcParams["font.size"] = 20
 # change the font family to Arial
-plt.rcParams['font.family'] = 'Arial'
+plt.rcParams["font.family"] = "Arial"
 
 # simulation setup
 dt = 0.0001
@@ -70,14 +71,29 @@ init_u_s_ee = 0.3
 init_tau_x_ee = 0.01
 
 l_alpha = [0, 5, 15, 77, 90]
-sections = ['A', 'B', 'C', 'D', 'E']
+sections = ["A", "B", "C", "D", "E"]
 
-m_r_e_SST_freeze, m_r_p_SST_freeze, m_r_s_SST_freeze, m_r_v_SST_freeze = np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T))
-m_r_e_PV_freeze, m_r_p_PV_freeze, m_r_s_PV_freeze, m_r_v_PV_freeze = np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T))
-m_r_e_both_freeze, m_r_p_both_freeze, m_r_s_both_freeze, m_r_v_both_freeze = np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T))
+m_r_e_SST_freeze, m_r_p_SST_freeze, m_r_s_SST_freeze, m_r_v_SST_freeze = (
+    np.zeros((len(l_alpha), T)),
+    np.zeros((len(l_alpha), T)),
+    np.zeros((len(l_alpha), T)),
+    np.zeros((len(l_alpha), T)),
+)
+m_r_e_PV_freeze, m_r_p_PV_freeze, m_r_s_PV_freeze, m_r_v_PV_freeze = (
+    np.zeros((len(l_alpha), T)),
+    np.zeros((len(l_alpha), T)),
+    np.zeros((len(l_alpha), T)),
+    np.zeros((len(l_alpha), T)),
+)
+m_r_e_both_freeze, m_r_p_both_freeze, m_r_s_both_freeze, m_r_v_both_freeze = (
+    np.zeros((len(l_alpha), T)),
+    np.zeros((len(l_alpha), T)),
+    np.zeros((len(l_alpha), T)),
+    np.zeros((len(l_alpha), T)),
+)
 
-# Inhibition stabilization 
-l_freeze = ['SST', 'PV', 'both']
+# Inhibition stabilization
+l_freeze = ["SST", "PV", "both"]
 
 for ID, population in enumerate(l_freeze):
     for k, alpha in enumerate(l_alpha):
@@ -118,17 +134,17 @@ for ID, population in enumerate(l_freeze):
                 r_e = r_e + (-r_e + np.power(z_e, alpha_e)) / tau_e * dt
 
             # freeze PV population
-            if i > 39999 and (population == 'PV' or population == 'both'):
-                r_p =  r_p
+            if i > 39999 and (population == "PV" or population == "both"):
+                r_p = r_p
             else:
                 r_p = r_p + (-r_p + np.power(z_p, alpha_p)) / tau_p * dt
 
             # freeze SST population
-            if i > 39999 and (population == 'SST' or population == 'both'):
+            if i > 39999 and (population == "SST" or population == "both"):
                 r_s = r_s
             else:
                 r_s = r_s + (-r_s + np.power(z_s, alpha_s)) / tau_s * dt
-                
+
             r_v = r_v + (-r_v + np.power(z_v, alpha_v)) / tau_v * dt
 
             r_e = r_e * (r_e > 0)
@@ -163,17 +179,17 @@ for ID, population in enumerate(l_freeze):
         l_r_s = np.asarray(l_r_s)
         l_r_v = np.asarray(l_r_v)
 
-        if population == 'SST':
+        if population == "SST":
             m_r_e_SST_freeze[k] = l_r_e
             m_r_p_SST_freeze[k] = l_r_p
             m_r_s_SST_freeze[k] = l_r_s
             m_r_v_SST_freeze[k] = l_r_v
-        elif population == 'PV':
+        elif population == "PV":
             m_r_e_PV_freeze[k] = l_r_e
             m_r_p_PV_freeze[k] = l_r_p
             m_r_s_PV_freeze[k] = l_r_s
             m_r_v_PV_freeze[k] = l_r_v
-        elif population == 'both':
+        elif population == "both":
             m_r_e_both_freeze[k] = l_r_e
             m_r_p_both_freeze[k] = l_r_p
             m_r_s_both_freeze[k] = l_r_s
@@ -184,97 +200,97 @@ for ID, population in enumerate(l_freeze):
 for i in range(len(l_alpha)):
     plt.figure()
 
-    plt.plot(m_r_e_SST_freeze[i]/m_r_e_SST_freeze[i][30000], color=pal[0])
-    plt.plot(m_r_p_SST_freeze[i]/m_r_p_SST_freeze[i][30000], color=pal[1])
-    plt.plot(m_r_s_SST_freeze[i]/m_r_s_SST_freeze[i][30000], color=pal[2])
-    plt.plot(m_r_v_SST_freeze[i]/m_r_v_SST_freeze[i][30000], color=pal[3])
+    plt.plot(m_r_e_SST_freeze[i] / m_r_e_SST_freeze[i][30000], color=pal[0])
+    plt.plot(m_r_p_SST_freeze[i] / m_r_p_SST_freeze[i][30000], color=pal[1])
+    plt.plot(m_r_s_SST_freeze[i] / m_r_s_SST_freeze[i][30000], color=pal[2])
+    plt.plot(m_r_v_SST_freeze[i] / m_r_v_SST_freeze[i][30000], color=pal[3])
 
     plt.xticks(np.arange(30000, 90000 + 5000, 20000), np.arange(0, 7, 2))
 
     if i in [1, 2]:
-        plt.hlines(y=999, xmin=40000, xmax=90000, color='gray')
+        plt.hlines(y=999, xmin=40000, xmax=90000, color="gray")
         plt.yticks([0.1, 1, 10, 100, 1000])
         plt.ylim([0.1, 1000])
-        plt.yscale('log')
+        plt.yscale("log")
     else:
-        plt.hlines(y=1.09, xmin=40000, xmax=90000, color='gray')
+        plt.hlines(y=1.09, xmin=40000, xmax=90000, color="gray")
         plt.yticks([0.95, 1, 1.05, 1.1])
         plt.ylim([0.95, 1.1])
 
-    plt.xlabel('Time (s)')
-    plt.ylabel('Relative change (a.u.)')
+    plt.xlabel("Time (s)")
+    plt.ylabel("Relative change (a.u.)")
     plt.xlim([30000, 90000])
 
     alpha = l_alpha[i]
-    plt.title(f'SST freeze, {alpha=}')
-    
-    plt.legend(['E', 'PV', 'SST', 'VIP'], loc='upper right')
+    plt.title(f"SST freeze, {alpha=}")
 
-    plt.savefig(f'Fig_S8{sections[i]}_left.png')
+    plt.legend(["E", "PV", "SST", "VIP"], loc="upper right")
+
+    plt.savefig(f"Fig_S8{sections[i]}_left.png")
     plt.close()
 
-# example activity plots PV freeze -- inhibition stabilization 
+# example activity plots PV freeze -- inhibition stabilization
 for i in range(len(l_alpha)):
     plt.figure()
 
-    plt.plot(m_r_e_PV_freeze[i]/m_r_e_PV_freeze[i][30000], color=pal[0])
-    plt.plot(m_r_p_PV_freeze[i]/m_r_p_PV_freeze[i][30000], color=pal[1])
-    plt.plot(m_r_s_PV_freeze[i]/m_r_s_PV_freeze[i][30000], color=pal[2])
-    plt.plot(m_r_v_PV_freeze[i]/m_r_v_PV_freeze[i][30000], color=pal[3])
+    plt.plot(m_r_e_PV_freeze[i] / m_r_e_PV_freeze[i][30000], color=pal[0])
+    plt.plot(m_r_p_PV_freeze[i] / m_r_p_PV_freeze[i][30000], color=pal[1])
+    plt.plot(m_r_s_PV_freeze[i] / m_r_s_PV_freeze[i][30000], color=pal[2])
+    plt.plot(m_r_v_PV_freeze[i] / m_r_v_PV_freeze[i][30000], color=pal[3])
 
     plt.xticks(np.arange(30000, 90000 + 5000, 20000), np.arange(0, 7, 2))
-    plt.xlabel('Time (s)')
-    plt.ylabel('Relative change (a.u.)')
+    plt.xlabel("Time (s)")
+    plt.ylabel("Relative change (a.u.)")
     plt.xlim([30000, 90000])
 
     if i in [0, 1]:
-        plt.hlines(y=99.9, xmin=40000, xmax=90000, color='gray')
+        plt.hlines(y=99.9, xmin=40000, xmax=90000, color="gray")
         plt.yticks([0.1, 1, 10, 100])
         plt.ylim([0.1, 100])
-        plt.yscale('log')
+        plt.yscale("log")
     else:
-        plt.hlines(y=1.09, xmin=40000, xmax=90000, color='gray')
+        plt.hlines(y=1.09, xmin=40000, xmax=90000, color="gray")
         plt.yticks([0.9, 0.95, 1, 1.05, 1.1])
         plt.ylim([0.9, 1.1])
 
     alpha = l_alpha[i]
-    plt.title(f'PV freeze, {alpha=}')
+    plt.title(f"PV freeze, {alpha=}")
 
-    plt.legend(['E', 'PV', 'SST', 'VIP'], loc='upper right')
+    plt.legend(["E", "PV", "SST", "VIP"], loc="upper right")
 
-    plt.savefig(f'Fig_S8{sections[i]}_middle.png')
+    plt.savefig(f"Fig_S8{sections[i]}_middle.png")
     plt.close()
-    
-# example activity plots both freeze -- inhibition stabilization 
+
+# example activity plots both freeze -- inhibition stabilization
 for i in range(len(l_alpha)):
     plt.figure()
 
-    plt.plot(m_r_e_both_freeze[i]/m_r_e_both_freeze[i][30000], color=pal[0])
-    plt.plot(m_r_p_both_freeze[i]/m_r_p_both_freeze[i][30000], color=pal[1])
-    plt.plot(m_r_s_both_freeze[i]/m_r_s_both_freeze[i][30000], color=pal[2])
-    plt.plot(m_r_v_both_freeze[i]/m_r_v_both_freeze[i][30000], color=pal[3])
+    plt.plot(m_r_e_both_freeze[i] / m_r_e_both_freeze[i][30000], color=pal[0])
+    plt.plot(m_r_p_both_freeze[i] / m_r_p_both_freeze[i][30000], color=pal[1])
+    plt.plot(m_r_s_both_freeze[i] / m_r_s_both_freeze[i][30000], color=pal[2])
+    plt.plot(m_r_v_both_freeze[i] / m_r_v_both_freeze[i][30000], color=pal[3])
 
     plt.xticks(np.arange(30000, 90000 + 5000, 20000), np.arange(0, 7, 2))
     # plt.yticks([0.8, 0.9, 1, 1.1, 1.2])
-    plt.xlabel('Time (s)')
-    plt.ylabel('Relative change (a.u.)')
+    plt.xlabel("Time (s)")
+    plt.ylabel("Relative change (a.u.)")
     plt.xlim([30000, 90000])
     # plt.ylim([-2, 20+10*i])
 
     if i in [0, 1, 2]:
-        plt.hlines(y=999, xmin=40000, xmax=90000, color='gray')
+        plt.hlines(y=999, xmin=40000, xmax=90000, color="gray")
         plt.yticks([0.1, 1, 10, 100, 1000])
         plt.ylim([0.1, 1000])
-        plt.yscale('log')
+        plt.yscale("log")
     else:
-        plt.hlines(y=1.09, xmin=40000, xmax=90000, color='gray')
+        plt.hlines(y=1.09, xmin=40000, xmax=90000, color="gray")
         plt.yticks([0.9, 0.95, 1, 1.05, 1.1])
         plt.ylim([0.9, 1.1])
 
     alpha = l_alpha[i]
-    plt.title(f'Both freeze, {alpha=}')
+    plt.title(f"Both freeze, {alpha=}")
 
-    plt.legend(['E', 'PV', 'SST', 'VIP'], loc='upper right')
+    plt.legend(["E", "PV", "SST", "VIP"], loc="upper right")
 
-    plt.savefig(f'Fig_S8{sections[i]}_right.png')
+    plt.savefig(f"Fig_S8{sections[i]}_right.png")
     plt.close()

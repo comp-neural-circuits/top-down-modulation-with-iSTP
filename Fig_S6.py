@@ -2,35 +2,35 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # increase the figure size
-plt.rcParams['figure.figsize'] = [12, 10]
+plt.rcParams["figure.figsize"] = [12, 10]
 
 # remove the top and right spines from plot in the global plt setting
-plt.rcParams['axes.spines.top'] = False
-plt.rcParams['axes.spines.right'] = False
+plt.rcParams["axes.spines.top"] = False
+plt.rcParams["axes.spines.right"] = False
 # change the linewidth of the axes and spines
-plt.rcParams['axes.linewidth'] = 2
-plt.rcParams['lines.linewidth'] = 4
-plt.rcParams['xtick.major.size'] = 10
-plt.rcParams['xtick.major.width'] = 2
-plt.rcParams['ytick.major.size'] = 10
-plt.rcParams['ytick.major.width'] = 2
-plt.rcParams['xtick.minor.size'] = 5
-plt.rcParams['xtick.minor.width'] = 2
-plt.rcParams['ytick.minor.size'] = 5
-plt.rcParams['ytick.minor.width'] = 2
+plt.rcParams["axes.linewidth"] = 2
+plt.rcParams["lines.linewidth"] = 4
+plt.rcParams["xtick.major.size"] = 10
+plt.rcParams["xtick.major.width"] = 2
+plt.rcParams["ytick.major.size"] = 10
+plt.rcParams["ytick.major.width"] = 2
+plt.rcParams["xtick.minor.size"] = 5
+plt.rcParams["xtick.minor.width"] = 2
+plt.rcParams["ytick.minor.size"] = 5
+plt.rcParams["ytick.minor.width"] = 2
 # change the fontsize of the ticks label
-plt.rcParams['xtick.labelsize'] = 20
-plt.rcParams['ytick.labelsize'] = 20
+plt.rcParams["xtick.labelsize"] = 20
+plt.rcParams["ytick.labelsize"] = 20
 # change the fontsize of the axes label
-plt.rcParams['axes.labelsize'] = 20
+plt.rcParams["axes.labelsize"] = 20
 # change the fontsize of the legend
-plt.rcParams['legend.fontsize'] = 20
+plt.rcParams["legend.fontsize"] = 20
 # change the fontsize of the title
-plt.rcParams['axes.titlesize'] = 20
+plt.rcParams["axes.titlesize"] = 20
 # change the title font size
-plt.rcParams['font.size'] = 20
+plt.rcParams["font.size"] = 20
 # change the font family to Arial
-plt.rcParams['font.family'] = 'Arial'
+plt.rcParams["font.family"] = "Arial"
 
 # simulation setup
 dt = 0.0001
@@ -66,7 +66,7 @@ tau_e, tau_p, tau_s, tau_v = 0.020, 0.010, 0.010, 0.010
 alpha_e, alpha_p, alpha_s, alpha_v = 1.0, 1.0, 1.0, 1.0
 
 
-l_alpha = np.arange(0,20.1,1)
+l_alpha = np.arange(0, 20.1, 1)
 c = 0
 
 l_eig_E, l_eig_E_VIP = [], []
@@ -144,12 +144,11 @@ for k, alpha in enumerate(l_alpha):
         J_E_VIP[1, 0] = Jve / tau_e
         J_E_VIP[1, 1] = (-Jvv - 1) / tau_v
 
-
         if i == 49999:
             eig_E_VIP = np.linalg.eig(J_E_VIP)[0]
             l_eig_E_VIP.append(max(np.real(eig_E_VIP)))
 
-            l_eig_E.append((Jee - 1) /tau_e)
+            l_eig_E.append((Jee - 1) / tau_e)
 
     l_r_e = np.asarray(l_r_e)
     l_r_p = np.asarray(l_r_p)
@@ -163,22 +162,18 @@ l_eig_E = np.asarray(l_eig_E)
 # plot the leading eigenvalues of the E and the E-VIP subnetwork
 plt.figure()
 plt.plot(l_eig_E)
-plt.plot(l_eig_E_VIP, '--')
+plt.plot(l_eig_E_VIP, "--")
 
 plt.xticks([0, 5, 10, 15, 20])
 plt.yticks([-30, -15, 0, 15, 30])
-plt.xlabel(r'$\alpha$')
-plt.ylabel('Leading eigenvalue')
+plt.xlabel(r"$\alpha$")
+plt.ylabel("Leading eigenvalue")
 plt.xlim([-1, 21])
 plt.ylim([-30, 30])
 
-plt.legend(['E subnetwork', 'E-VIP subnetwork'], loc='upper right')
+plt.legend(["E subnetwork", "E-VIP subnetwork"], loc="upper right")
 
-plt.axhline(y=0, color='k', linestyle='--')
+plt.axhline(y=0, color="k", linestyle="--")
 
-plt.savefig('Fig_S6.png')
+plt.savefig("Fig_S6.png")
 plt.close()
-
-
-
-   

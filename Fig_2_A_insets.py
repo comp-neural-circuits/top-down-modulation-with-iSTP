@@ -2,35 +2,35 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # increase the figure size
-plt.rcParams['figure.figsize'] = [12, 10]
+plt.rcParams["figure.figsize"] = [12, 10]
 
 # remove the top and right spines from plot in the global plt setting
-plt.rcParams['axes.spines.top'] = False
-plt.rcParams['axes.spines.right'] = False
+plt.rcParams["axes.spines.top"] = False
+plt.rcParams["axes.spines.right"] = False
 # change the linewidth of the axes and spines
-plt.rcParams['axes.linewidth'] = 2
-plt.rcParams['lines.linewidth'] = 4
-plt.rcParams['xtick.major.size'] = 10
-plt.rcParams['xtick.major.width'] = 2
-plt.rcParams['ytick.major.size'] = 10
-plt.rcParams['ytick.major.width'] = 2
-plt.rcParams['xtick.minor.size'] = 5
-plt.rcParams['xtick.minor.width'] = 2
-plt.rcParams['ytick.minor.size'] = 5
-plt.rcParams['ytick.minor.width'] = 2
+plt.rcParams["axes.linewidth"] = 2
+plt.rcParams["lines.linewidth"] = 4
+plt.rcParams["xtick.major.size"] = 10
+plt.rcParams["xtick.major.width"] = 2
+plt.rcParams["ytick.major.size"] = 10
+plt.rcParams["ytick.major.width"] = 2
+plt.rcParams["xtick.minor.size"] = 5
+plt.rcParams["xtick.minor.width"] = 2
+plt.rcParams["ytick.minor.size"] = 5
+plt.rcParams["ytick.minor.width"] = 2
 # change the fontsize of the ticks label
-plt.rcParams['xtick.labelsize'] = 20
-plt.rcParams['ytick.labelsize'] = 20
+plt.rcParams["xtick.labelsize"] = 20
+plt.rcParams["ytick.labelsize"] = 20
 # change the fontsize of the axes label
-plt.rcParams['axes.labelsize'] = 20
+plt.rcParams["axes.labelsize"] = 20
 # change the fontsize of the legend
-plt.rcParams['legend.fontsize'] = 20
+plt.rcParams["legend.fontsize"] = 20
 # change the fontsize of the title
-plt.rcParams['axes.titlesize'] = 20
+plt.rcParams["axes.titlesize"] = 20
 # change the title font size
-plt.rcParams['font.size'] = 20
+plt.rcParams["font.size"] = 20
 # change the font family to Arial
-plt.rcParams['font.family'] = 'Arial'
+plt.rcParams["font.family"] = "Arial"
 
 
 # F-I curve
@@ -44,13 +44,13 @@ plt.plot(l_x, l_y)
 
 plt.xticks([-100, 0, 100])
 plt.yticks([0, 50, 100])
-plt.xlabel('Input')
-plt.ylabel('Firing rate')
+plt.xlabel("Input")
+plt.ylabel("Firing rate")
 plt.xlim([-100, 100])
 plt.ylim([0, 100])
-plt.axvline(x=0, color='k', linestyle='--')
-plt.title('F-I curve')
-plt.savefig('network_input_output_curve.png')
+plt.axvline(x=0, color="k", linestyle="--")
+plt.title("F-I curve")
+plt.savefig("network_input_output_curve.png")
 
 # STP mechanisms
 u_s = 1
@@ -80,19 +80,19 @@ for t in range(T):
 
 # plotting
 plt.figure()
-plt.plot(l_x_pp, color='gray')
+plt.plot(l_x_pp, color="gray")
 plt.xticks([])
 plt.yticks([])
-plt.xlabel('Presynaptic stimulation')
-plt.ylabel('Connection strength')
-plt.title('STD', color='gray')
-plt.savefig('STD.png')
+plt.xlabel("Presynaptic stimulation")
+plt.ylabel("Connection strength")
+plt.title("STD", color="gray")
+plt.savefig("STD.png")
 
 plt.figure()
-plt.plot(l_u_vs, color='purple')
+plt.plot(l_u_vs, color="purple")
 plt.xticks([])
 plt.yticks([])
-plt.xlabel('Presynaptic stimulation')
-plt.ylabel('Connection strength')
-plt.title('STF', color='purple')
-plt.savefig('STF.png')
+plt.xlabel("Presynaptic stimulation")
+plt.ylabel("Connection strength")
+plt.title("STF", color="purple")
+plt.savefig("STF.png")

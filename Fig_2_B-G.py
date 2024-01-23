@@ -2,36 +2,36 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # increase the figure size
-plt.rcParams['figure.figsize'] = [12, 10]
+plt.rcParams["figure.figsize"] = [12, 10]
 
 # remove the top and right spines from plot in the global plt setting
-plt.rcParams['axes.spines.top'] = False
-plt.rcParams['axes.spines.right'] = False
+plt.rcParams["axes.spines.top"] = False
+plt.rcParams["axes.spines.right"] = False
 # change the linewidth of the axes and spines
-plt.rcParams['axes.linewidth'] = 2
-plt.rcParams['lines.linewidth'] = 4
-plt.rcParams['xtick.major.size'] = 10
-plt.rcParams['xtick.major.width'] = 2
-plt.rcParams['ytick.major.size'] = 10
-plt.rcParams['ytick.major.width'] = 2
-plt.rcParams['xtick.minor.size'] = 5
-plt.rcParams['xtick.minor.width'] = 2
-plt.rcParams['ytick.minor.size'] = 5
-plt.rcParams['ytick.minor.width'] = 2
+plt.rcParams["axes.linewidth"] = 2
+plt.rcParams["lines.linewidth"] = 4
+plt.rcParams["xtick.major.size"] = 10
+plt.rcParams["xtick.major.width"] = 2
+plt.rcParams["ytick.major.size"] = 10
+plt.rcParams["ytick.major.width"] = 2
+plt.rcParams["xtick.minor.size"] = 5
+plt.rcParams["xtick.minor.width"] = 2
+plt.rcParams["ytick.minor.size"] = 5
+plt.rcParams["ytick.minor.width"] = 2
 # change the fontsize of the ticks label
-plt.rcParams['xtick.labelsize'] = 20
-plt.rcParams['ytick.labelsize'] = 20
+plt.rcParams["xtick.labelsize"] = 20
+plt.rcParams["ytick.labelsize"] = 20
 # change the fontsize of the axes label
-plt.rcParams['axes.labelsize'] = 20
+plt.rcParams["axes.labelsize"] = 20
 # change the fontsize of the legend
-plt.rcParams['legend.fontsize'] = 20
+plt.rcParams["legend.fontsize"] = 20
 # change the fontsize of the title
-plt.rcParams['axes.titlesize'] = 20
+plt.rcParams["axes.titlesize"] = 20
 # change the title font size
-plt.rcParams['font.size'] = 20
+plt.rcParams["font.size"] = 20
 
 # change the font family to Arial
-plt.rcParams['font.family'] = 'Arial'
+plt.rcParams["font.family"] = "Arial"
 
 # simulation setup
 dt = 0.0001
@@ -65,7 +65,7 @@ Jvv = 0
 c = 3
 
 l_b_STP = [True, False]
-l_alpha = np.arange(0,20.1,1)
+l_alpha = np.arange(0, 20.1, 1)
 l_change_in_SST, l_change_in_SST_STP = [], []
 
 for b_STP in l_b_STP:
@@ -145,17 +145,20 @@ for b_STP in l_b_STP:
         l_r_v = np.asarray(l_r_v)
 
         if b_STP:
-            l_change_in_SST_STP.append(np.mean(l_r_s[60000:65000]) - np.mean(l_r_s[40000:45000]))
+            l_change_in_SST_STP.append(
+                np.mean(l_r_s[60000:65000]) - np.mean(l_r_s[40000:45000])
+            )
         else:
-            l_change_in_SST.append(np.mean(l_r_s[60000:65000]) - np.mean(l_r_s[40000:45000]))
-
+            l_change_in_SST.append(
+                np.mean(l_r_s[60000:65000]) - np.mean(l_r_s[40000:45000])
+            )
 
         # plotting
-        s_title_1 = 'top_down_modulation'
-        s_title_t1 = 'top down modulation'
+        s_title_1 = "top_down_modulation"
+        s_title_t1 = "top down modulation"
 
         # network activity with and iSTP mechanisms for low and high baseline states (Fig. 2B,C,E,F)
-        if (alpha == 0 or alpha == 15):
+        if alpha == 0 or alpha == 15:
             plt.figure()
 
             plt.plot(l_r_e)
@@ -163,82 +166,78 @@ for b_STP in l_b_STP:
             plt.plot(l_r_s)
             plt.plot(l_r_v)
 
-            plt.axhline(y=np.mean(l_r_s[35000:45000]), color='k', linestyle='--')
+            plt.axhline(y=np.mean(l_r_s[35000:45000]), color="k", linestyle="--")
 
             plt.xticks(np.arange(30000, 90000 + 5000, 20000), np.arange(0, 6 + 0.5, 2))
             plt.xlim([30000, 90000])
-            plt.xlabel('Time (s)')
-            plt.ylabel('Firing rate (a.u.)')
+            plt.xlabel("Time (s)")
+            plt.ylabel("Firing rate (a.u.)")
 
-            plt.legend(['E', 'PV', 'SST', 'VIP'], loc='upper left')
+            plt.legend(["E", "PV", "SST", "VIP"], loc="upper left")
 
-                
             if alpha == 0:
-                plt.hlines(y=14.9, xmin=50000, xmax=70000, color='gray')
+                plt.hlines(y=14.9, xmin=50000, xmax=70000, color="gray")
                 plt.yticks([0, 5, 10, 15])
                 plt.ylim([0, 15])
                 if b_STP:
-                    s_title_2 = 'with_STP'
-                    s_title_t2 = 'with STP'
-                    plt.title('Low baseline ' + str(s_title_t2))
-                    plt.savefig('Fig_2B.png')
+                    s_title_2 = "with_STP"
+                    s_title_t2 = "with STP"
+                    plt.title("Low baseline " + str(s_title_t2))
+                    plt.savefig("Fig_2B.png")
                     plt.close()
                 else:
-                    s_title_2 = 'without_STP'
-                    s_title_t2 = 'without STP'
-                    plt.title('Low baseline ' + str(s_title_t2))
-                    plt.savefig('Fig_2E.png')
+                    s_title_2 = "without_STP"
+                    s_title_t2 = "without STP"
+                    plt.title("Low baseline " + str(s_title_t2))
+                    plt.savefig("Fig_2E.png")
                     plt.close()
             else:
                 if b_STP:
-                    plt.hlines(y=59.9, xmin=50000, xmax=70000, color='gray')
+                    plt.hlines(y=59.9, xmin=50000, xmax=70000, color="gray")
                     plt.yticks([0, 20, 40, 60])
                     plt.ylim([0, 60])
-                    plt.title('High baseline ' + str(s_title_t2))
-                    plt.savefig('Fig_2C.png')
+                    plt.title("High baseline " + str(s_title_t2))
+                    plt.savefig("Fig_2C.png")
                     plt.close()
                 else:
-                    plt.hlines(y=14.9, xmin=50000, xmax=70000, color='gray')
+                    plt.hlines(y=14.9, xmin=50000, xmax=70000, color="gray")
                     plt.yticks([0, 5, 10, 15])
                     plt.ylim([0, 15])
-                    plt.title('High baseline ' + str(s_title_t2))
-                    plt.savefig('Fig_2F.png')
+                    plt.title("High baseline " + str(s_title_t2))
+                    plt.savefig("Fig_2F.png")
                     plt.close()
-                    
+
 
 # Change in SST activity with STP mechanisms for different baseline activity levels (Fig. 2D)
 plt.figure()
-plt.plot(l_change_in_SST_STP, color='gray')
+plt.plot(l_change_in_SST_STP, color="gray")
 
 plt.xticks([0, 5, 10, 15, 20], [0, 5, 10, 15, 20])
 plt.yticks([-10, -5, 0, 5, 10])
 
-plt.xlabel(r'$\alpha$')
-plt.ylabel('Change in SST activity (a.u.)')
+plt.xlabel(r"$\alpha$")
+plt.ylabel("Change in SST activity (a.u.)")
 plt.xlim([-1, 21])
 plt.ylim([-10, 10])
-plt.axhline(y=0, color='k', linestyle='--')
-plt.title('Network with iSTP')
+plt.axhline(y=0, color="k", linestyle="--")
+plt.title("Network with iSTP")
 
-plt.savefig('Fig_2D.png')
+plt.savefig("Fig_2D.png")
 plt.close()
 
 # Change in SST activity with STP mechanisms for different baseline activity levels (Fig. 2G)
 plt.figure()
-plt.plot(l_change_in_SST, color='gray')
+plt.plot(l_change_in_SST, color="gray")
 
 plt.xticks([0, 5, 10, 15, 20], [0, 5, 10, 15, 20])
 plt.yticks([-10, -5, 0, 5, 10])
 
-plt.xlabel(r'$\alpha$')
-plt.ylabel('Change in SST activity (a.u.)')
+plt.xlabel(r"$\alpha$")
+plt.ylabel("Change in SST activity (a.u.)")
 plt.xlim([-1, 21])
 plt.ylim([-10, 10])
-plt.axhline(y=0, color='k', linestyle='--')
-plt.title('Network without iSTP')
+plt.axhline(y=0, color="k", linestyle="--")
+plt.title("Network without iSTP")
 
-plt.savefig('Fig_2G.png')
+plt.savefig("Fig_2G.png")
 plt.close()
-
-
-

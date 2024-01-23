@@ -2,35 +2,35 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # increase the figure size
-plt.rcParams['figure.figsize'] = [12, 10]
+plt.rcParams["figure.figsize"] = [12, 10]
 
 # remove the top and right spines from plot in the global plt setting
-plt.rcParams['axes.spines.top'] = False
-plt.rcParams['axes.spines.right'] = False
+plt.rcParams["axes.spines.top"] = False
+plt.rcParams["axes.spines.right"] = False
 # change the linewidth of the axes and spines
-plt.rcParams['axes.linewidth'] = 2
-plt.rcParams['lines.linewidth'] = 4
-plt.rcParams['xtick.major.size'] = 10
-plt.rcParams['xtick.major.width'] = 2
-plt.rcParams['ytick.major.size'] = 10
-plt.rcParams['ytick.major.width'] = 2
-plt.rcParams['xtick.minor.size'] = 5
-plt.rcParams['xtick.minor.width'] = 2
-plt.rcParams['ytick.minor.size'] = 5
-plt.rcParams['ytick.minor.width'] = 2
+plt.rcParams["axes.linewidth"] = 2
+plt.rcParams["lines.linewidth"] = 4
+plt.rcParams["xtick.major.size"] = 10
+plt.rcParams["xtick.major.width"] = 2
+plt.rcParams["ytick.major.size"] = 10
+plt.rcParams["ytick.major.width"] = 2
+plt.rcParams["xtick.minor.size"] = 5
+plt.rcParams["xtick.minor.width"] = 2
+plt.rcParams["ytick.minor.size"] = 5
+plt.rcParams["ytick.minor.width"] = 2
 # change the fontsize of the ticks label
-plt.rcParams['xtick.labelsize'] = 20
-plt.rcParams['ytick.labelsize'] = 20
+plt.rcParams["xtick.labelsize"] = 20
+plt.rcParams["ytick.labelsize"] = 20
 # change the fontsize of the axes label
-plt.rcParams['axes.labelsize'] = 20
+plt.rcParams["axes.labelsize"] = 20
 # change the fontsize of the legend
-plt.rcParams['legend.fontsize'] = 20
+plt.rcParams["legend.fontsize"] = 20
 # change the fontsize of the title
-plt.rcParams['axes.titlesize'] = 20
+plt.rcParams["axes.titlesize"] = 20
 # change the title font size
-plt.rcParams['font.size'] = 20
+plt.rcParams["font.size"] = 20
 # change the font family to Arial
-plt.rcParams['font.family'] = 'Arial'
+plt.rcParams["font.family"] = "Arial"
 
 # simulation setup
 dt = 0.0001
@@ -62,7 +62,7 @@ Jvs = 0.4
 Jvv = 0
 
 
-l_alpha = np.arange(0,20.1,.5)
+l_alpha = np.arange(0, 20.1, 0.5)
 l_c = [0]
 
 
@@ -138,12 +138,12 @@ for n, c in enumerate(l_c):
             l_r_v.append(r_v)
 
             # k-value
-            p_pp = 1 / (1+u_s*tau_x *r_p)
-            p_pp_prime = - (u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
-            p_ep = 1 / (1+u_s*tau_x *r_p)
-            p_ep_prime = - (u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
-            p_vp = 1 / (1+u_s*tau_x *r_p)
-            p_vp_prime = - (u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
+            p_pp = 1 / (1 + u_s * tau_x * r_p)
+            p_pp_prime = -(u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
+            p_ep = 1 / (1 + u_s * tau_x * r_p)
+            p_ep_prime = -(u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
+            p_vp = 1 / (1 + u_s * tau_x * r_p)
+            p_vp_prime = -(u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
             p_vs = (1 + U * U_max * tau_u * r_s) / (1 + U * tau_u * r_s)
             p_vs_prime = (U * (U_max - 1) * tau_u) / np.power(1 + U * tau_u * r_s, 2)
 
@@ -157,18 +157,23 @@ for n, c in enumerate(l_c):
             k_SV_PED = -(p_ep + p_ep_prime * r_p - 1) * Jsv * Jpe * Jep
 
             if i == 49999:
-
                 mat_R = np.array(
-                    [[1-Jee, (p_ep + p_ep_prime * r_p) * Jep, Jes, Jev],
-                    [-Jpe, 1 + (p_pp + p_pp_prime * r_p) * Jpp, Jps, Jpv],
-                    [-Jse, Jsp, 1+Jss, Jsv],
-                    [-Jve, (p_vp + p_vp_prime * r_p) * Jvp, (p_vs + p_vs_prime * r_s) * Jvs, 1 + Jvv]
+                    [
+                        [1 - Jee, (p_ep + p_ep_prime * r_p) * Jep, Jes, Jev],
+                        [-Jpe, 1 + (p_pp + p_pp_prime * r_p) * Jpp, Jps, Jpv],
+                        [-Jse, Jsp, 1 + Jss, Jsv],
+                        [
+                            -Jve,
+                            (p_vp + p_vp_prime * r_p) * Jvp,
+                            (p_vs + p_vs_prime * r_s) * Jvs,
+                            1 + Jvv,
+                        ],
                     ]
                 )
 
                 det_mat_R = np.linalg.det(mat_R)
 
-                l_D.append(1/det_mat_R)
+                l_D.append(1 / det_mat_R)
                 l_x_pp.append(p_pp + p_pp_prime * r_p - 1)
                 l_x_ep.append(p_ep + p_ep_prime * r_p - 1)
 
@@ -187,7 +192,6 @@ for n, c in enumerate(l_c):
     l_k_SV_PPD = np.asarray(l_k_SV_PPD)
     l_k_SV_PED = np.asarray(l_k_SV_PED)
 
-
     # plot magnitude of D (Fig. S4A)
     plt.figure()
 
@@ -199,18 +203,17 @@ for n, c in enumerate(l_c):
     plt.xticks([0, 10, 20, 30, 40], [0, 5, 10, 15, 20])
     plt.xlim([-2, 42])
 
-    plt.xlabel(r'$\alpha$')
-    plt.ylabel('Magnitude of D')
+    plt.xlabel(r"$\alpha$")
+    plt.ylabel("Magnitude of D")
 
-    plt.savefig('Fig_S5A.png')
+    plt.savefig("Fig_S5A.png")
     plt.close()
-
 
     # plot PV-to-E STD and PV-to-PV STD dependent term (Fig. S5 B)
     plt.figure()
 
-    plt.plot(l_x_pp, color='blue')
-    plt.plot(l_x_ep, '--', color='orange')
+    plt.plot(l_x_pp, color="blue")
+    plt.plot(l_x_ep, "--", color="orange")
 
     plt.yticks([-1, -0.5, 0, 0.5, 1])
     plt.ylim([-1, 1])
@@ -218,21 +221,24 @@ for n, c in enumerate(l_c):
     plt.xticks([0, 10, 20, 30, 40], [0, 5, 10, 15, 20])
     plt.xlim([-2, 42])
 
-    plt.axhline(y=0, color='k', linestyle='--')
+    plt.axhline(y=0, color="k", linestyle="--")
 
-    plt.xlabel(r'$\alpha$')
-    plt.ylabel('Magnitude (a.u.)')
+    plt.xlabel(r"$\alpha$")
+    plt.ylabel("Magnitude (a.u.)")
 
-    plt.legend(["$x_{PP}^* + x_{PP}^{*'}r_P - 1$", "$x_{EP}^* + x_{EP}^{*'}r_P - 1$"], loc='upper left')
+    plt.legend(
+        ["$x_{PP}^* + x_{PP}^{*'}r_P - 1$", "$x_{EP}^* + x_{EP}^{*'}r_P - 1$"],
+        loc="upper left",
+    )
 
-    plt.savefig('Fig_S4B.png')
+    plt.savefig("Fig_S4B.png")
     plt.close()
 
     # plot K_SV_PPD and K_SV_PED (Fig. S5 C)
     plt.figure()
 
-    plt.plot(l_k_SV_PPD, color='green')
-    plt.plot(l_k_SV_PED, color='orange')
+    plt.plot(l_k_SV_PPD, color="green")
+    plt.plot(l_k_SV_PED, color="orange")
 
     plt.yticks([-1, -0.5, 0, 0.5, 1])
     plt.ylim([-1.0, 1.0])
@@ -240,15 +246,15 @@ for n, c in enumerate(l_c):
     plt.xticks([0, 10, 20, 30, 40], [0, 5, 10, 15, 20])
     plt.xlim([-2, 42])
 
-    plt.axhline(y=0, color='k', linestyle='--')
+    plt.axhline(y=0, color="k", linestyle="--")
 
-    plt.xlabel(r'$\alpha$')
-    plt.ylabel('Magnitude (a.u.)')
+    plt.xlabel(r"$\alpha$")
+    plt.ylabel("Magnitude (a.u.)")
 
-    plt.legend([r'$\mathbf{K}_{SV}^{\text{PPD}}$', r'$\mathbf{K}_{SV}^{\text{PED}}$'], loc='lower left')
+    plt.legend(
+        [r"$\mathbf{K}_{SV}^{\text{PPD}}$", r"$\mathbf{K}_{SV}^{\text{PED}}$"],
+        loc="lower left",
+    )
 
-    plt.savefig('Fig_S4C.png')
+    plt.savefig("Fig_S4C.png")
     plt.close()
-
-
-

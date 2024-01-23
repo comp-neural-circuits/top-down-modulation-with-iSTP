@@ -3,35 +3,35 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 
 # increase the figure size
-plt.rcParams['figure.figsize'] = [12, 10]
+plt.rcParams["figure.figsize"] = [12, 10]
 
 # remove the top and right spines from plot in the global plt setting
-plt.rcParams['axes.spines.top'] = False
-plt.rcParams['axes.spines.right'] = False
+plt.rcParams["axes.spines.top"] = False
+plt.rcParams["axes.spines.right"] = False
 # change the linewidth of the axes and spines
-plt.rcParams['axes.linewidth'] = 2
-plt.rcParams['lines.linewidth'] = 4
-plt.rcParams['xtick.major.size'] = 10
-plt.rcParams['xtick.major.width'] = 2
-plt.rcParams['ytick.major.size'] = 10
-plt.rcParams['ytick.major.width'] = 2
-plt.rcParams['xtick.minor.size'] = 5
-plt.rcParams['xtick.minor.width'] = 2
-plt.rcParams['ytick.minor.size'] = 5
-plt.rcParams['ytick.minor.width'] = 2
+plt.rcParams["axes.linewidth"] = 2
+plt.rcParams["lines.linewidth"] = 4
+plt.rcParams["xtick.major.size"] = 10
+plt.rcParams["xtick.major.width"] = 2
+plt.rcParams["ytick.major.size"] = 10
+plt.rcParams["ytick.major.width"] = 2
+plt.rcParams["xtick.minor.size"] = 5
+plt.rcParams["xtick.minor.width"] = 2
+plt.rcParams["ytick.minor.size"] = 5
+plt.rcParams["ytick.minor.width"] = 2
 # change the fontsize of the ticks label
-plt.rcParams['xtick.labelsize'] = 20
-plt.rcParams['ytick.labelsize'] = 20
+plt.rcParams["xtick.labelsize"] = 20
+plt.rcParams["ytick.labelsize"] = 20
 # change the fontsize of the axes label
-plt.rcParams['axes.labelsize'] = 20
+plt.rcParams["axes.labelsize"] = 20
 # change the fontsize of the legend
-plt.rcParams['legend.fontsize'] = 20
+plt.rcParams["legend.fontsize"] = 20
 # change the fontsize of the title
-plt.rcParams['axes.titlesize'] = 20
+plt.rcParams["axes.titlesize"] = 20
 # change the title font size
-plt.rcParams['font.size'] = 20
+plt.rcParams["font.size"] = 20
 # change the font family to Arial
-plt.rcParams['font.family'] = 'Arial'
+plt.rcParams["font.family"] = "Arial"
 
 # simulation setup
 dt = 0.0001
@@ -67,7 +67,13 @@ l_alpha = np.arange(20, -0.1, -1)
 c = 3
 
 # variables
-l_intact, l_inactive_PV_E, l_inactive_PV_PV, l_inactive_PV_VIP, l_inactive_SST_VIP = [], [], [], [], []
+l_intact, l_inactive_PV_E, l_inactive_PV_PV, l_inactive_PV_VIP, l_inactive_SST_VIP = (
+    [],
+    [],
+    [],
+    [],
+    [],
+)
 
 x_ep_ini, x_pp_ini, x_vp_ini = 1, 1, 1
 u_vs_ini = 1
@@ -167,7 +173,9 @@ for alpha in l_alpha:
             else:
                 if alpha == np.max(l_alpha):
                     if i <= 50000:
-                        u_vs = u_vs + ((1 - u_vs) / tau_u + U * (U_max - u_vs) * r_s) * dt
+                        u_vs = (
+                            u_vs + ((1 - u_vs) / tau_u + U * (U_max - u_vs) * r_s) * dt
+                        )
                         u_vs = np.clip(u_vs, 1, U_max)
                         u_vs_ini = u_vs
                     else:
@@ -188,25 +196,33 @@ for alpha in l_alpha:
         if m == 0:
             l_intact.append(np.mean(l_r_s[60000:65000]) - np.mean(l_r_s[40000:45000]))
         elif m == 1:
-            l_inactive_PV_E.append(np.mean(l_r_s[60000:65000]) - np.mean(l_r_s[40000:45000]))
+            l_inactive_PV_E.append(
+                np.mean(l_r_s[60000:65000]) - np.mean(l_r_s[40000:45000])
+            )
         elif m == 2:
-            l_inactive_PV_PV.append(np.mean(l_r_s[60000:65000]) - np.mean(l_r_s[40000:45000]))
+            l_inactive_PV_PV.append(
+                np.mean(l_r_s[60000:65000]) - np.mean(l_r_s[40000:45000])
+            )
         elif m == 3:
-            l_inactive_PV_VIP.append(np.mean(l_r_s[60000:65000]) - np.mean(l_r_s[40000:45000]))
+            l_inactive_PV_VIP.append(
+                np.mean(l_r_s[60000:65000]) - np.mean(l_r_s[40000:45000])
+            )
         else:
-            l_inactive_SST_VIP.append(np.mean(l_r_s[60000:65000]) - np.mean(l_r_s[40000:45000]))
+            l_inactive_SST_VIP.append(
+                np.mean(l_r_s[60000:65000]) - np.mean(l_r_s[40000:45000])
+            )
 
         # if alpha == 15:
         if m == 0:
-            s_title_t = 'Network with STP'
+            s_title_t = "Network with STP"
         elif m == 1:
-            s_title_t = 'Inactive PV-to-E STD'
+            s_title_t = "Inactive PV-to-E STD"
         elif m == 2:
-            s_title_t = 'Inactive PV-to-PV STD'
+            s_title_t = "Inactive PV-to-PV STD"
         elif m == 3:
-            s_title_t = 'Inactive PV-to-VIP STD'
+            s_title_t = "Inactive PV-to-VIP STD"
         else:
-            s_title_t = 'Inactive SST-to-VIP STF'
+            s_title_t = "Inactive SST-to-VIP STF"
 
 
 # plot the networks with one mechanism deactivated (Fig. 3F)
@@ -222,24 +238,32 @@ l_inactive_PV_PV.reverse()
 l_inactive_PV_VIP.reverse()
 l_inactive_SST_VIP.reverse()
 
-plt.plot(l_intact, color=cmap_blue.to_rgba(4+3))
-plt.plot(l_inactive_PV_E, color=cmap_orange.to_rgba(3+3))
-plt.plot(l_inactive_PV_PV, color=cmap_blue.to_rgba(3+3))
-plt.plot(l_inactive_PV_VIP, color=cmap_blue.to_rgba(2+3))
-plt.plot(l_inactive_SST_VIP, color=cmap_blue.to_rgba(1+3))
-plt.axhline(y=0, color='k', linestyle='--')
+plt.plot(l_intact, color=cmap_blue.to_rgba(4 + 3))
+plt.plot(l_inactive_PV_E, color=cmap_orange.to_rgba(3 + 3))
+plt.plot(l_inactive_PV_PV, color=cmap_blue.to_rgba(3 + 3))
+plt.plot(l_inactive_PV_VIP, color=cmap_blue.to_rgba(2 + 3))
+plt.plot(l_inactive_SST_VIP, color=cmap_blue.to_rgba(1 + 3))
+plt.axhline(y=0, color="k", linestyle="--")
 
 plt.xticks([0, 5, 10, 15, 20], [0, 5, 10, 15, 20])
 plt.yticks([-10, -5, 0, 5, 10])
 
-plt.xlabel(r'$\alpha$')
-plt.ylabel('Change in SST activity (a.u.)')
+plt.xlabel(r"$\alpha$")
+plt.ylabel("Change in SST activity (a.u.)")
 
 plt.xlim([-1, 21])
 plt.ylim([-10, 10])
 
-plt.legend(['Networks with STP', 'Inactive PV-to-E STD', 'Inactive PV-to-PV STD', 'Inactive PV-to-VIP STD', 'Inactive SST-to-VIP STF'], loc='best')
+plt.legend(
+    [
+        "Networks with STP",
+        "Inactive PV-to-E STD",
+        "Inactive PV-to-PV STD",
+        "Inactive PV-to-VIP STD",
+        "Inactive SST-to-VIP STF",
+    ],
+    loc="best",
+)
 
-plt.savefig('Fig_3F.png')
+plt.savefig("Fig_3F.png")
 plt.close()
-

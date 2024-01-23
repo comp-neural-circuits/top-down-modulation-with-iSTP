@@ -2,35 +2,35 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # increase the figure size
-plt.rcParams['figure.figsize'] = [12, 10]
+plt.rcParams["figure.figsize"] = [12, 10]
 
 # remove the top and right spines from plot in the global plt setting
-plt.rcParams['axes.spines.top'] = False
-plt.rcParams['axes.spines.right'] = False
+plt.rcParams["axes.spines.top"] = False
+plt.rcParams["axes.spines.right"] = False
 # change the linewidth of the axes and spines
-plt.rcParams['axes.linewidth'] = 2
-plt.rcParams['lines.linewidth'] = 4
-plt.rcParams['xtick.major.size'] = 10
-plt.rcParams['xtick.major.width'] = 2
-plt.rcParams['ytick.major.size'] = 10
-plt.rcParams['ytick.major.width'] = 2
-plt.rcParams['xtick.minor.size'] = 5
-plt.rcParams['xtick.minor.width'] = 2
-plt.rcParams['ytick.minor.size'] = 5
-plt.rcParams['ytick.minor.width'] = 2
+plt.rcParams["axes.linewidth"] = 2
+plt.rcParams["lines.linewidth"] = 4
+plt.rcParams["xtick.major.size"] = 10
+plt.rcParams["xtick.major.width"] = 2
+plt.rcParams["ytick.major.size"] = 10
+plt.rcParams["ytick.major.width"] = 2
+plt.rcParams["xtick.minor.size"] = 5
+plt.rcParams["xtick.minor.width"] = 2
+plt.rcParams["ytick.minor.size"] = 5
+plt.rcParams["ytick.minor.width"] = 2
 # change the fontsize of the ticks label
-plt.rcParams['xtick.labelsize'] = 20
-plt.rcParams['ytick.labelsize'] = 20
+plt.rcParams["xtick.labelsize"] = 20
+plt.rcParams["ytick.labelsize"] = 20
 # change the fontsize of the axes label
-plt.rcParams['axes.labelsize'] = 20
+plt.rcParams["axes.labelsize"] = 20
 # change the fontsize of the legend
-plt.rcParams['legend.fontsize'] = 20
+plt.rcParams["legend.fontsize"] = 20
 # change the fontsize of the title
-plt.rcParams['axes.titlesize'] = 20
+plt.rcParams["axes.titlesize"] = 20
 # change the title font size
-plt.rcParams['font.size'] = 20
+plt.rcParams["font.size"] = 20
 # change the font family to Arial
-plt.rcParams['font.family'] = 'Arial'
+plt.rcParams["font.family"] = "Arial"
 
 # simulation setup
 dt = 0.0001
@@ -87,7 +87,7 @@ for alpha in l_alpha:
 
     l_r_e, l_r_p, l_r_s, l_r_v = [], [], [], []
     l_R_SV_temp = []
-    
+
     for i in range(T):
         if 50000 <= i < 70000:
             g_e, g_p, g_s, g_v = g_1 + alpha, g_1 + alpha, g_2, g_1 + c
@@ -131,17 +131,16 @@ for alpha in l_alpha:
         u_se = u_se + ((1 - u_se) / tau_u + U * (U_max_se - u_se) * r_e) * dt
         u_se = np.clip(u_se, 1, U_max_se)
 
-
-        if  i == 49999:
+        if i == 49999:
             # k-value
-            p_pp = 1 / (1+u_s*tau_x *r_p)
-            p_pp_prime = - (u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
+            p_pp = 1 / (1 + u_s * tau_x * r_p)
+            p_pp_prime = -(u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
 
-            p_ep = 1 / (1+u_s*tau_x *r_p)
-            p_ep_prime = - (u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
+            p_ep = 1 / (1 + u_s * tau_x * r_p)
+            p_ep_prime = -(u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
 
-            p_vp = 1 / (1+u_s*tau_x *r_p)
-            p_vp_prime = - (u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
+            p_vp = 1 / (1 + u_s * tau_x * r_p)
+            p_vp_prime = -(u_s * tau_x) / np.power(1 + u_s * tau_x * r_p, 2)
 
             p_vs = (1 + U * U_max * tau_u * r_s) / (1 + U * tau_u * r_s)
             p_vs_prime = (U * (U_max - 1) * tau_u) / np.power(1 + U * tau_u * r_s, 2)
@@ -149,27 +148,39 @@ for alpha in l_alpha:
             p_se = (1 + U * U_max_se * tau_u * r_e) / (1 + U * tau_u * r_e)
             p_se_prime = (U * (U_max_se - 1) * tau_u) / np.power(1 + U * tau_u * r_e, 2)
 
-            k_SV = (p_pp + p_pp_prime * r_p) * Jee * Jpp * Jsv - (p_ep + p_ep_prime * r_p) * Jsv * Jpe * Jep - (p_pp + p_pp_prime * r_p) * Jpp * Jsv + Jee * Jsv - Jsv
+            k_SV = (
+                (p_pp + p_pp_prime * r_p) * Jee * Jpp * Jsv
+                - (p_ep + p_ep_prime * r_p) * Jsv * Jpe * Jep
+                - (p_pp + p_pp_prime * r_p) * Jpp * Jsv
+                + Jee * Jsv
+                - Jsv
+            )
 
             mat_R = np.array(
-                [[1-Jee, (p_ep + p_ep_prime * r_p) * Jep, Jes, Jev],
-                [-Jpe, 1 + (p_pp + p_pp_prime * r_p) * Jpp, Jps, Jpv],
-                [-(p_se + p_se_prime * r_e) * Jse, Jsp, 1+Jss, Jsv],
-                [-Jve, (p_vp + p_vp_prime * r_p) * Jvp, (p_vs + p_vs_prime * r_s) * Jvs, 1 + Jvv]
+                [
+                    [1 - Jee, (p_ep + p_ep_prime * r_p) * Jep, Jes, Jev],
+                    [-Jpe, 1 + (p_pp + p_pp_prime * r_p) * Jpp, Jps, Jpv],
+                    [-(p_se + p_se_prime * r_e) * Jse, Jsp, 1 + Jss, Jsv],
+                    [
+                        -Jve,
+                        (p_vp + p_vp_prime * r_p) * Jvp,
+                        (p_vs + p_vs_prime * r_s) * Jvs,
+                        1 + Jvv,
+                    ],
                 ]
             )
 
             det_mat_R = np.linalg.det(mat_R)
 
-            R_SV = 1/det_mat_R * k_SV * c
+            R_SV = 1 / det_mat_R * k_SV * c
 
             l_R_SV.append(R_SV)
-            
+
         l_r_e.append(r_e)
         l_r_p.append(r_p)
         l_r_s.append(r_s)
         l_r_v.append(r_v)
-        
+
     l_r_e = np.asarray(l_r_e)
     l_r_p = np.asarray(l_r_p)
     l_r_s = np.asarray(l_r_s)
@@ -177,7 +188,7 @@ for alpha in l_alpha:
 
     l_SST_change.append(np.mean(l_r_s[60000:65000]) - np.mean(l_r_s[40000:45000]))
 
-    if (alpha == 0 or alpha == 15):
+    if alpha == 0 or alpha == 15:
         plt.figure()
 
         plt.plot(l_r_e)
@@ -192,33 +203,33 @@ for alpha in l_alpha:
         else:
             plt.yticks([0, 20, 40, 60])
 
-        plt.xlabel('Time (s)')
-        plt.ylabel('Firing rate (a.u.)')
-        plt.title('top down modulation')
-        plt.axhline(y=np.mean(l_r_s[35000:45000]), color='k', linestyle='--')
+        plt.xlabel("Time (s)")
+        plt.ylabel("Firing rate (a.u.)")
+        plt.title("top down modulation")
+        plt.axhline(y=np.mean(l_r_s[35000:45000]), color="k", linestyle="--")
         plt.xlim([30000, 90000])
 
         if alpha == 0:
-            plt.hlines(y=14.9, xmin=50000, xmax=70000, color='gray')
+            plt.hlines(y=14.9, xmin=50000, xmax=70000, color="gray")
             plt.ylim([0, 15])
         else:
-            plt.hlines(y=59.9, xmin=50000, xmax=70000, color='gray')
+            plt.hlines(y=59.9, xmin=50000, xmax=70000, color="gray")
             plt.ylim([0, 60])
 
-        plt.legend(['E', 'PV', 'SST', 'VIP'], loc='upper right')
+        plt.legend(["E", "PV", "SST", "VIP"], loc="upper right")
 
         if alpha == 0:
-            plt.savefig('Fig_S9B.png')
+            plt.savefig("Fig_S9B.png")
         else:
-            plt.savefig('Fig_S9C.png')
+            plt.savefig("Fig_S9C.png")
 
 # plotting
 plt.figure()
 
 plt.plot(l_SST_change)
-plt.plot(l_R_SV, '--')
+plt.plot(l_R_SV, "--")
 
-plt.axhline(y=0, color='k', linestyle='--')
+plt.axhline(y=0, color="k", linestyle="--")
 
 plt.xticks([0, 10, 20, 30, 40], [0, 5, 10, 15, 20])
 plt.xlim([-2, 42])
@@ -226,11 +237,11 @@ plt.xlim([-2, 42])
 plt.yticks([-2, 0, 2, 4])
 plt.ylim([-2, 4])
 
-plt.xlabel(r'$\alpha$')
-plt.ylabel('Change in SST activity (a.u.)')
+plt.xlabel(r"$\alpha$")
+plt.ylabel("Change in SST activity (a.u.)")
 
-plt.title(r'Large perturbation (large $\delta g_V$)')
+plt.title(r"Large perturbation (large $\delta g_V$)")
 
-plt.legend(['simulation', 'analytics $\mathbf{R}_{SV}$'], loc='upper left')
+plt.legend(["simulation", "analytics $\mathbf{R}_{SV}$"], loc="upper left")
 
-plt.savefig('Fig_S9A.png')
+plt.savefig("Fig_S9A.png")

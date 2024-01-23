@@ -2,35 +2,35 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # increase the figure size
-plt.rcParams['figure.figsize'] = [12, 10]
+plt.rcParams["figure.figsize"] = [12, 10]
 
 # remove the top and right spines from plot in the global plt setting
-plt.rcParams['axes.spines.top'] = False
-plt.rcParams['axes.spines.right'] = False
+plt.rcParams["axes.spines.top"] = False
+plt.rcParams["axes.spines.right"] = False
 # change the linewidth of the axes and spines
-plt.rcParams['axes.linewidth'] = 2
-plt.rcParams['lines.linewidth'] = 4
-plt.rcParams['xtick.major.size'] = 10
-plt.rcParams['xtick.major.width'] = 2
-plt.rcParams['ytick.major.size'] = 10
-plt.rcParams['ytick.major.width'] = 2
-plt.rcParams['xtick.minor.size'] = 5
-plt.rcParams['xtick.minor.width'] = 2
-plt.rcParams['ytick.minor.size'] = 5
-plt.rcParams['ytick.minor.width'] = 2
+plt.rcParams["axes.linewidth"] = 2
+plt.rcParams["lines.linewidth"] = 4
+plt.rcParams["xtick.major.size"] = 10
+plt.rcParams["xtick.major.width"] = 2
+plt.rcParams["ytick.major.size"] = 10
+plt.rcParams["ytick.major.width"] = 2
+plt.rcParams["xtick.minor.size"] = 5
+plt.rcParams["xtick.minor.width"] = 2
+plt.rcParams["ytick.minor.size"] = 5
+plt.rcParams["ytick.minor.width"] = 2
 # change the fontsize of the ticks label
-plt.rcParams['xtick.labelsize'] = 20
-plt.rcParams['ytick.labelsize'] = 20
+plt.rcParams["xtick.labelsize"] = 20
+plt.rcParams["ytick.labelsize"] = 20
 # change the fontsize of the axes label
-plt.rcParams['axes.labelsize'] = 20
+plt.rcParams["axes.labelsize"] = 20
 # change the fontsize of the legend
-plt.rcParams['legend.fontsize'] = 20
+plt.rcParams["legend.fontsize"] = 20
 # change the fontsize of the title
-plt.rcParams['axes.titlesize'] = 20
+plt.rcParams["axes.titlesize"] = 20
 # change the title font size
-plt.rcParams['font.size'] = 20
+plt.rcParams["font.size"] = 20
 # change the font family to Arial
-plt.rcParams['font.family'] = 'Arial'
+plt.rcParams["font.family"] = "Arial"
 
 # simulation setup
 dt = 0.0001
@@ -63,7 +63,7 @@ Jvv = 0
 
 c = 3
 
-l_alpha = np.arange(0,20.1,.5)
+l_alpha = np.arange(0, 20.1, 0.5)
 inh_total_low, inh_total_high = np.zeros_like(l_alpha), np.zeros_like(l_alpha)
 e_low, e_high = np.zeros_like(l_alpha), np.zeros_like(l_alpha)
 sum_low, sum_high = np.zeros_like(l_alpha), np.zeros_like(l_alpha)
@@ -146,50 +146,50 @@ for index, alpha in enumerate(l_alpha):
     l_sum = np.array(l_sum)
 
     # input to E plot at low and high baseline states (Fig. 2H, I)
-    if (alpha == 0 or alpha == 15):
+    if alpha == 0 or alpha == 15:
         plt.figure()
 
         plt.plot(l_e_e)
-        plt.plot(l_inh_e, color='red')
-        plt.plot(l_sum, color='purple')
-        
-        plt.axhline(y=0, color='k', linestyle='--')
+        plt.plot(l_inh_e, color="red")
+        plt.plot(l_sum, color="purple")
+
+        plt.axhline(y=0, color="k", linestyle="--")
 
         plt.xticks(np.arange(30000, 90000 + 5000, 20000), np.arange(0, 6 + 0.5, 2))
         plt.xlim([30000, 90000])
-        plt.xlabel('Time (s)')
+        plt.xlabel("Time (s)")
 
-        plt.ylabel('Input to E (a.u.)')        
+        plt.ylabel("Input to E (a.u.)")
 
-        plt.legend(['E', 'I', 'E+I'], loc='upper left')
+        plt.legend(["E", "I", "E+I"], loc="upper left")
 
         if alpha == 0:
-            plt.hlines(y=7.9, xmin=50000, xmax=70000, color='gray')
-            
-            plt.title('Low baseline state')
+            plt.hlines(y=7.9, xmin=50000, xmax=70000, color="gray")
+
+            plt.title("Low baseline state")
 
             plt.yticks([-8, -4, 0, 4, 8])
             plt.ylim([-8, 8])
 
-            plt.savefig('Fig_2H.png')
+            plt.savefig("Fig_2H.png")
             plt.close()
         else:
-            plt.hlines(y=59.9, xmin=50000, xmax=70000, color='gray')
-            plt.title('High baseline state')
+            plt.hlines(y=59.9, xmin=50000, xmax=70000, color="gray")
+            plt.title("High baseline state")
             plt.yticks([-40, -20, 0, 20, 40, 60])
             plt.ylim([-40, 60])
 
-            plt.savefig('Fig_2I.png')
+            plt.savefig("Fig_2I.png")
             plt.close()
 
 # difference in input to E between baseline and top-down stimulation (Fig. 2J)
 plt.figure()
 
-s_title_t1 = 'Input to E stim-baseline'
+s_title_t1 = "Input to E stim-baseline"
 
 plt.plot(e_high - e_low)
-plt.plot(inh_total_high - inh_total_low, color='red')
-plt.plot(sum_high - sum_low, color='purple')
+plt.plot(inh_total_high - inh_total_low, color="red")
+plt.plot(sum_high - sum_low, color="purple")
 
 plt.yticks([-10, 0, 10, 20, 30, 40])
 plt.ylim([-10, 40])
@@ -197,14 +197,13 @@ plt.ylim([-10, 40])
 plt.xticks([0, 10, 20, 30, 40], [0, 5, 10, 15, 20])
 plt.xlim([-2, 42])
 
-plt.axhline(y=0, color='k', linestyle='--')
+plt.axhline(y=0, color="k", linestyle="--")
 
-plt.xlabel(r'$\alpha$')
-plt.ylabel('Change in input to E (a.u.)')
+plt.xlabel(r"$\alpha$")
+plt.ylabel("Change in input to E (a.u.)")
 plt.title(str(s_title_t1))
 
-plt.legend(['E', 'I', 'E+I'], loc='upper left')
+plt.legend(["E", "I", "E+I"], loc="upper left")
 
-plt.savefig('Fig_2J.png')
+plt.savefig("Fig_2J.png")
 plt.close()
-

@@ -3,35 +3,35 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # increase the figure size
-plt.rcParams['figure.figsize'] = [12, 10]
+plt.rcParams["figure.figsize"] = [12, 10]
 
 # remove the top and right spines from plot in the global plt setting
-plt.rcParams['axes.spines.top'] = False
-plt.rcParams['axes.spines.right'] = False
+plt.rcParams["axes.spines.top"] = False
+plt.rcParams["axes.spines.right"] = False
 # change the linewidth of the axes and spines
-plt.rcParams['axes.linewidth'] = 2
-plt.rcParams['lines.linewidth'] = 4
-plt.rcParams['xtick.major.size'] = 10
-plt.rcParams['xtick.major.width'] = 2
-plt.rcParams['ytick.major.size'] = 10
-plt.rcParams['ytick.major.width'] = 2
-plt.rcParams['xtick.minor.size'] = 5
-plt.rcParams['xtick.minor.width'] = 2
-plt.rcParams['ytick.minor.size'] = 5
-plt.rcParams['ytick.minor.width'] = 2
+plt.rcParams["axes.linewidth"] = 2
+plt.rcParams["lines.linewidth"] = 4
+plt.rcParams["xtick.major.size"] = 10
+plt.rcParams["xtick.major.width"] = 2
+plt.rcParams["ytick.major.size"] = 10
+plt.rcParams["ytick.major.width"] = 2
+plt.rcParams["xtick.minor.size"] = 5
+plt.rcParams["xtick.minor.width"] = 2
+plt.rcParams["ytick.minor.size"] = 5
+plt.rcParams["ytick.minor.width"] = 2
 # change the fontsize of the ticks label
-plt.rcParams['xtick.labelsize'] = 20
-plt.rcParams['ytick.labelsize'] = 20
+plt.rcParams["xtick.labelsize"] = 20
+plt.rcParams["ytick.labelsize"] = 20
 # change the fontsize of the axes label
-plt.rcParams['axes.labelsize'] = 20
+plt.rcParams["axes.labelsize"] = 20
 # change the fontsize of the legend
-plt.rcParams['legend.fontsize'] = 20
+plt.rcParams["legend.fontsize"] = 20
 # change the fontsize of the title
-plt.rcParams['axes.titlesize'] = 20
+plt.rcParams["axes.titlesize"] = 20
 # change the title font size
-plt.rcParams['font.size'] = 20
+plt.rcParams["font.size"] = 20
 # change the font family to Arial
-plt.rcParams['font.family'] = 'Arial'
+plt.rcParams["font.family"] = "Arial"
 
 pal = sns.color_palette("deep")
 
@@ -68,10 +68,15 @@ Jvv = 0
 c = 0.1
 
 l_alpha = np.arange(0, 20.5, 0.5)
-m_r_e_PV_freeze, m_r_p_PV_freeze, m_r_s_PV_freeze, m_r_v_PV_freeze = np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T)), np.zeros((len(l_alpha), T))
+m_r_e_PV_freeze, m_r_p_PV_freeze, m_r_s_PV_freeze, m_r_v_PV_freeze = (
+    np.zeros((len(l_alpha), T)),
+    np.zeros((len(l_alpha), T)),
+    np.zeros((len(l_alpha), T)),
+    np.zeros((len(l_alpha), T)),
+)
 
-# Inhibition stabilization 
-l_freeze = ['PV']
+# Inhibition stabilization
+l_freeze = ["PV"]
 for population in l_freeze:
     for k, alpha in enumerate(l_alpha):
         # E-PV no change, PV-SST no connections
@@ -110,13 +115,13 @@ for population in l_freeze:
                 r_e = r_e + (-r_e + np.power(z_e, alpha_e)) / tau_e * dt
 
             # freeze PV population
-            if i > 39999 and population == 'PV':
-                r_p =  r_p
+            if i > 39999 and population == "PV":
+                r_p = r_p
             else:
                 r_p = r_p + (-r_p + np.power(z_p, alpha_p)) / tau_p * dt
 
             # freeze SST population
-            if i > 39999 and population == 'SST':
+            if i > 39999 and population == "SST":
                 r_s = r_s
             else:
                 r_s = r_s + (-r_s + np.power(z_s, alpha_s)) / tau_s * dt
@@ -155,7 +160,7 @@ for population in l_freeze:
         l_r_s = np.asarray(l_r_s)
         l_r_v = np.asarray(l_r_v)
 
-        if population == 'PV':
+        if population == "PV":
             m_r_e_PV_freeze[k] = l_r_e
             m_r_p_PV_freeze[k] = l_r_p
             m_r_s_PV_freeze[k] = l_r_s
@@ -166,22 +171,21 @@ for population in l_freeze:
 for i in [0]:
     plt.figure()
 
-    plt.plot(m_r_e_PV_freeze[i]/m_r_e_PV_freeze[i][30000], color=pal[0])
-    plt.plot(m_r_p_PV_freeze[i]/m_r_p_PV_freeze[i][30000], color=pal[1])
-    plt.plot(m_r_s_PV_freeze[i]/m_r_s_PV_freeze[i][30000], color=pal[2])
-    plt.plot(m_r_v_PV_freeze[i]/m_r_v_PV_freeze[i][30000], color=pal[3])
+    plt.plot(m_r_e_PV_freeze[i] / m_r_e_PV_freeze[i][30000], color=pal[0])
+    plt.plot(m_r_p_PV_freeze[i] / m_r_p_PV_freeze[i][30000], color=pal[1])
+    plt.plot(m_r_s_PV_freeze[i] / m_r_s_PV_freeze[i][30000], color=pal[2])
+    plt.plot(m_r_v_PV_freeze[i] / m_r_v_PV_freeze[i][30000], color=pal[3])
 
     plt.xticks(np.arange(70000, 130000 + 5000, 20000), np.arange(4, 11, 2))
-    plt.xlabel('Time (s)')
-    plt.ylabel('Normalized activity')
+    plt.xlabel("Time (s)")
+    plt.ylabel("Normalized activity")
     plt.xlim([70000, 130000])
 
-    if i==0:
+    if i == 0:
         plt.yticks([0.9, 0.95, 1, 1.05, 1.1])
         plt.ylim([0.9, 1.1])
 
-    plt.legend(['E', 'PV', 'SST', 'VIP'], loc='upper right')
+    plt.legend(["E", "PV", "SST", "VIP"], loc="upper right")
 
-    plt.savefig('Fig_5B_left_inset.png')
+    plt.savefig("Fig_5B_left_inset.png")
     plt.close()
-

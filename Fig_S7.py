@@ -2,35 +2,35 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # increase the figure size
-plt.rcParams['figure.figsize'] = [12, 10]
+plt.rcParams["figure.figsize"] = [12, 10]
 
 # remove the top and right spines from plot in the global plt setting
-plt.rcParams['axes.spines.top'] = False
-plt.rcParams['axes.spines.right'] = False
+plt.rcParams["axes.spines.top"] = False
+plt.rcParams["axes.spines.right"] = False
 # change the linewidth of the axes and spines
-plt.rcParams['axes.linewidth'] = 2
-plt.rcParams['lines.linewidth'] = 4
-plt.rcParams['xtick.major.size'] = 10
-plt.rcParams['xtick.major.width'] = 2
-plt.rcParams['ytick.major.size'] = 10
-plt.rcParams['ytick.major.width'] = 2
-plt.rcParams['xtick.minor.size'] = 5
-plt.rcParams['xtick.minor.width'] = 2
-plt.rcParams['ytick.minor.size'] = 5
-plt.rcParams['ytick.minor.width'] = 2
+plt.rcParams["axes.linewidth"] = 2
+plt.rcParams["lines.linewidth"] = 4
+plt.rcParams["xtick.major.size"] = 10
+plt.rcParams["xtick.major.width"] = 2
+plt.rcParams["ytick.major.size"] = 10
+plt.rcParams["ytick.major.width"] = 2
+plt.rcParams["xtick.minor.size"] = 5
+plt.rcParams["xtick.minor.width"] = 2
+plt.rcParams["ytick.minor.size"] = 5
+plt.rcParams["ytick.minor.width"] = 2
 # change the fontsize of the ticks label
-plt.rcParams['xtick.labelsize'] = 20
-plt.rcParams['ytick.labelsize'] = 20
+plt.rcParams["xtick.labelsize"] = 20
+plt.rcParams["ytick.labelsize"] = 20
 # change the fontsize of the axes label
-plt.rcParams['axes.labelsize'] = 20
+plt.rcParams["axes.labelsize"] = 20
 # change the fontsize of the legend
-plt.rcParams['legend.fontsize'] = 20
+plt.rcParams["legend.fontsize"] = 20
 # change the fontsize of the title
-plt.rcParams['axes.titlesize'] = 20
+plt.rcParams["axes.titlesize"] = 20
 # change the title font size
-plt.rcParams['font.size'] = 20
+plt.rcParams["font.size"] = 20
 # change the font family to Arial
-plt.rcParams['font.family'] = 'Arial'
+plt.rcParams["font.family"] = "Arial"
 
 # simulation setup
 dt = 0.0001
@@ -67,7 +67,7 @@ alpha_e, alpha_p, alpha_s, alpha_v = 1.0, 1.0, 1.0, 1.0
 
 
 c = 3
-l_alpha = np.arange(0,20.1,.5)
+l_alpha = np.arange(0, 20.1, 0.5)
 
 ratio_inh_SST_PV = []
 inh_total = np.zeros_like(l_alpha)
@@ -153,7 +153,7 @@ for index, alpha in enumerate(l_alpha):
         ex_e_e = Jee * r_e
 
         if i == 49999:
-            ratio_inh_SST_PV.append(inh_e_s/inh_e_p)
+            ratio_inh_SST_PV.append(inh_e_s / inh_e_p)
             inh_total[index] = inh_e_s + inh_e_p
             e_total[index] = ex_e_e
             input_sum[index] = inh_e + ex_e_e
@@ -206,7 +206,6 @@ for index, alpha in enumerate(l_alpha):
 
     l_sum = np.asarray(l_sum)
 
-
     # plot the input to E for low and high baseline activity(Fig. S7A, B)
     if alpha == 0 or alpha == 15:
         plt.figure()
@@ -216,36 +215,36 @@ for index, alpha in enumerate(l_alpha):
         plt.plot(l_inh_e_s)
         plt.plot(l_inh_e)
         plt.plot(l_sum)
-        
-        plt.axhline(y=0, color='k', linestyle='--')
+
+        plt.axhline(y=0, color="k", linestyle="--")
 
         plt.xticks(np.arange(30000, 90000 + 5000, 20000), np.arange(0, 7, 2))
         plt.xlim([30000, 90000])
-        plt.xlabel('Time (s)')
+        plt.xlabel("Time (s)")
 
-        plt.ylabel('Input to E (a.u.)')
+        plt.ylabel("Input to E (a.u.)")
 
-        plt.legend(['E', 'PV', 'SST', 'I', 'E + I'], loc='upper left')
+        plt.legend(["E", "PV", "SST", "I", "E + I"], loc="upper left")
 
         if alpha == 0:
-            plt.hlines(y=7.9, xmin=50000, xmax=70000, color='gray')
+            plt.hlines(y=7.9, xmin=50000, xmax=70000, color="gray")
             plt.yticks([-8, -4, 0, 4, 8])
             plt.ylim([-8, 8])
-            plt.title('Low baseline state')
-            plt.savefig('Fig_S7A.png')
+            plt.title("Low baseline state")
+            plt.savefig("Fig_S7A.png")
         else:
-            plt.hlines(y=59.9, xmin=50000, xmax=70000, color='gray')
+            plt.hlines(y=59.9, xmin=50000, xmax=70000, color="gray")
             plt.yticks([-40, -20, 0, 20, 40, 60])
             plt.ylim([-40, 60])
-            plt.title('High baseline state')
-            plt.savefig('Fig_S7B.png')
+            plt.title("High baseline state")
+            plt.savefig("Fig_S7B.png")
             plt.close()
 
 # plot the ratio of SST over PV to E inhibition for different alpha (Fig. S7C)
 plt.figure()
 
 plt.plot(ratio_inh_SST_PV)
-plt.axhline(y=1, color='k', linestyle='--')
+plt.axhline(y=1, color="k", linestyle="--")
 
 plt.yticks([0, 0.5, 1.0, 1.5, 2.0, 2.5])
 plt.ylim([0, 2.5])
@@ -253,9 +252,7 @@ plt.ylim([0, 2.5])
 plt.xticks([0, 10, 20, 30, 40], [0, 5, 10, 15, 20])
 plt.xlim([-2, 42])
 
-plt.xlabel(r'$\alpha$')
-plt.ylabel('Ratio of SST-to-E \n to PV-to-E inhibition')
+plt.xlabel(r"$\alpha$")
+plt.ylabel("Ratio of SST-to-E \n to PV-to-E inhibition")
 
-plt.savefig('Fig_S7C.png')
-
-
+plt.savefig("Fig_S7C.png")
